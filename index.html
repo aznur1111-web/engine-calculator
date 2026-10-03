@@ -41,6 +41,7 @@ button.warn:hover{border-color:var(--orange);background:rgba(251,146,60,.08)}
 .tab.on{color:var(--cyan);border-bottom-color:var(--cyan)}
 
 /* ── layout ─────────────────────────── */
+  
 #wrap{display:flex;height:calc(100vh - 88px)}
 aside{width:264px;flex:0 0 264px;border-right:1px solid var(--border);background:var(--bg2);overflow-y:auto;padding:10px 0 40px}
 main{flex:1;overflow:auto;padding:14px 18px 60px;background:radial-gradient(1200px 500px at 70% -10%,rgba(0,170,255,.05),transparent 60%),var(--bg)}
@@ -116,11 +117,7 @@ table{border-collapse:collapse;font-family:var(--mono);font-size:11px;font-varia
 .toast{position:fixed;top:100px;right:20px;background:#0e1a17;border:1px solid var(--green);color:var(--green);font-family:var(--mono);font-size:11px;padding:10px 16px;border-radius:5px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:99;box-shadow:0 8px 30px rgba(0,0,0,.5)}
 @media(max-width:980px){aside{display:none}.statusbar{left:0}}
 
-/* =========================================================
-   AZNUR THEME - COLOR + FONT ONLY
-   Layout, spacing, sizing, structure and behavior are unchanged.
-   Palette/font matched to the current Aznur Image Compressor site.
-   ========================================================= */
+
 :root{
   --bg:#fafafa;
   --bg2:#fafafa;
@@ -368,7 +365,7 @@ input[type=range]::-webkit-slider-thumb{
   box-shadow:0 4px 12px rgba(0,0,0,.08);
 }
 
-/* Existing inline/semantic colors brought into the same Aznur palette */
+
 .pane h2{color:var(--text)}
 
 </style>
@@ -376,7 +373,7 @@ input[type=range]::-webkit-slider-thumb{
 <body>
 <header>
   <div class="hd-top">
-    <div class="logo">ENGINE CALCULATOR<small>// theoretical model &times; real-world benchmark</small></div>
+    <div class="logo">ENGINE CALCULATOR<small>// theoretical model &times; real-world benchmark (Curated by Sadman Aznur) </small></div>
     <div class="hd-btns">
       <button onclick="newProject()">New</button>
       <button onclick="saveProject()">Save</button>

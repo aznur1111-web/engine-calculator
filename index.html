@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ENGINE CALCULATOR - Theoretical Engine Model + Real-World Benchmarks. Curated by Sadman Aznur </title>
+<title>ENGINE CALCULATOR - Theoretical Engine Model + Real-World Benchmarks. Curated by Sadman Aznur</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -41,7 +41,6 @@ button.warn:hover{border-color:var(--orange);background:rgba(251,146,60,.08)}
 .tab.on{color:var(--cyan);border-bottom-color:var(--cyan)}
 
 /* ── layout ─────────────────────────── */
-  
 #wrap{display:flex;height:calc(100vh - 88px)}
 aside{width:264px;flex:0 0 264px;border-right:1px solid var(--border);background:var(--bg2);overflow-y:auto;padding:10px 0 40px}
 main{flex:1;overflow:auto;padding:14px 18px 60px;background:radial-gradient(1200px 500px at 70% -10%,rgba(0,170,255,.05),transparent 60%),var(--bg)}
@@ -76,11 +75,11 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;heigh
 .toolbar input[type=number]{width:64px;background:#0d131b;border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:11px;padding:4px 6px;border-radius:3px;text-align:right}
 .card{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:16px 18px;margin-bottom:16px;backdrop-filter:blur(8px)}
 .card h3{font-family:var(--mono);font-size:11px;letter-spacing:1.5px;color:var(--cyan);text-transform:uppercase;margin-bottom:12px}
-.grid-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:12px;margin-bottom:16px}
+.grid-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-bottom:16px}
 .stat{background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:13px 15px;position:relative;overflow:hidden}
 .stat::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--cyan);opacity:.7}
 .stat .k{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--dimmer);text-transform:uppercase}
-.stat .v{font-family:var(--mono);font-size:21px;font-weight:700;color:var(--text);margin:5px 0 2px;font-variant-numeric:tabular-nums}
+.stat .v{font-family:var(--mono);font-size:19px;font-weight:700;color:var(--text);margin:5px 0 2px;font-variant-numeric:tabular-nums}
 .stat .v small{font-size:11px;color:var(--dim);font-weight:400}
 .stat .d{font-size:10px;color:var(--dimmer);font-family:var(--mono)}
 
@@ -117,7 +116,11 @@ table{border-collapse:collapse;font-family:var(--mono);font-size:11px;font-varia
 .toast{position:fixed;top:100px;right:20px;background:#0e1a17;border:1px solid var(--green);color:var(--green);font-family:var(--mono);font-size:11px;padding:10px 16px;border-radius:5px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:99;box-shadow:0 8px 30px rgba(0,0,0,.5)}
 @media(max-width:980px){aside{display:none}.statusbar{left:0}}
 
-
+/* =========================================================
+   AZNUR THEME - COLOR + FONT ONLY
+   Layout, spacing, sizing, structure and behavior are unchanged.
+   Palette/font matched to the current Aznur Image Compressor site.
+   ========================================================= */
 :root{
   --bg:#fafafa;
   --bg2:#fafafa;
@@ -365,15 +368,13 @@ input[type=range]::-webkit-slider-thumb{
   box-shadow:0 4px 12px rgba(0,0,0,.08);
 }
 
-
 .pane h2{color:var(--text)}
-
 </style>
 </head>
 <body>
 <header>
   <div class="hd-top">
-    <div class="logo">ENGINE CALCULATOR<small>// theoretical model &times; real-world benchmark (Curated by Sadman Aznur) </small></div>
+    <div class="logo">ENGINE CALCULATOR<small>// theoretical model &times; real-world benchmark (Curated by Sadman Aznur)</small></div>
     <div class="hd-btns">
       <button onclick="newProject()">New</button>
       <button onclick="saveProject()">Save</button>
@@ -445,14 +446,14 @@ input[type=range]::-webkit-slider-thumb{
     <div class="formula">Displacement &nbsp;<b>Vd = N · π/4 · B² · S</b> &nbsp;·&nbsp; Mean piston speed &nbsp;<b>Cm = 2 · S · n</b></div>
     <div class="formula">Speed-density airflow &nbsp;<b>ṁ<sub>air</sub> = VE · ρ<sub>man</sub> · Vd · n / (2 · 60)</b> &nbsp; with &nbsp; <b>ρ<sub>man</sub> = MAP / (R · T<sub>man</sub>)</b></div>
     <div class="formula">Indicated pressure &nbsp;<b>IMEP = η<sub>c</sub> · (LHV / AFR) · ρ<sub>man</sub> · VE</b> &nbsp;·&nbsp; <b>BMEP = IMEP − FMEP</b> (Chen–Flynn style friction)</div>
-    <div class="formula">Torque &nbsp;<b>T = BMEP · Vd / (4π)</b> &nbsp;·&nbsp; Power &nbsp;<b>P = T · n / 5252</b> (hp, lb·ft, rpm)</div>
+    <div class="formula">Torque &nbsp;<b>T = BMEP · Vd / (4π)</b> &nbsp;·&nbsp; Power &nbsp;<b>P = T · n / 5252</b> (hp / kW, lb·ft / N·m, rpm)</div>
   </div>
 </div>
 
 <!-- ═══ VE TABLE ═══ -->
 <div class="pane" id="pane-ve">
   <h2>Volumetric Efficiency Table (%)</h2>
-  <div class="sub">Editable VE map - MAP (psig) rows × RPM columns. Click a cell and type to edit. Model-generated by default.</div>
+  <div class="sub">Editable VE map - MAP (psig / kPa) rows × RPM columns. Click a cell and type to edit. Model-generated by default.</div>
   <div class="toolbar">
     <span class="lbl">VE (%) &nbsp; MAP ↑ &nbsp; × &nbsp; RPM →</span><span class="sep"></span>
     <button class="primary" onclick="recalcVE()">Recalculate VE</button>
@@ -476,7 +477,7 @@ input[type=range]::-webkit-slider-thumb{
     <button onclick="exportCSV('timing')">Export CSV</button>
   </div>
   <div class="table-scroll" id="timingWrap"></div>
-  <div class="note">Model: MBT ≈ 10 + 26·(1 − load)<super></super> + rpm/300 - advances with RPM, retards with load. Knock limit from required-octane model: RON<sub>req</sub> rises with CR, boost and charge temperature, falls with richer AFR. Deficit leads to timing retard at ~1.5° per RON.</div>
+  <div class="note">Model: MBT ≈ 10 + 26·(1 − load) + rpm/300 - advances with RPM, retards with load. Knock limit from required-octane model: RON<sub>req</sub> rises with CR, boost and charge temperature, falls with richer AFR. Deficit leads to timing retard at ~1.5° per RON.</div>
 </div>
 
 <!-- ═══ AFR / IAT ═══ -->
@@ -501,18 +502,18 @@ input[type=range]::-webkit-slider-thumb{
   <h2>Dyno Simulation</h2>
   <div class="sub">Full-throttle sweep from the theoretical model - horsepower, torque and manifold pressure vs. RPM. Hover the graph to inspect.</div>
   <div class="toolbar">
-    <label class="lbl"><input type="checkbox" id="ckHP" checked onchange="drawDyno()"> HP</label>
-    <label class="lbl"><input type="checkbox" id="ckTQ" checked onchange="drawDyno()"> Torque</label>
-    <label class="lbl"><input type="checkbox" id="ckMAP" checked onchange="drawDyno()"> MAP</label><span class="sep"></span>
+    <label class="lbl"><input type="checkbox" id="ckHP" checked onchange="drawDyno()"> HP / kW</label>
+    <label class="lbl"><input type="checkbox" id="ckTQ" checked onchange="drawDyno()"> Torque (lb·ft / N·m)</label>
+    <label class="lbl"><input type="checkbox" id="ckMAP" checked onchange="drawDyno()"> MAP (psig / kPa)</label><span class="sep"></span>
     <span class="lbl">Sweep from</span><input type="number" id="d_from" value="1500" step="100">
     <span class="lbl">to</span><input type="number" id="d_to" value="7400" step="100"><span class="sep"></span>
     <button class="primary" onclick="renderDyno()">Rerun Dyno</button>
     <button onclick="exportCSV('dyno')">Export CSV</button>
   </div>
   <div class="legend">
-    <span><span class="sw" style="background:#22d3ee"></span>hp</span>
-    <span><span class="sw" style="background:#fbbf24"></span>lb·ft</span>
-    <span><span class="sw" style="background:#34d399"></span>MAP (psig)</span>
+    <span><span class="sw" style="background:#22d3ee"></span>hp / kW</span>
+    <span><span class="sw" style="background:#fbbf24"></span>lb·ft / N·m</span>
+    <span><span class="sw" style="background:#34d399"></span>MAP (psig / kPa)</span>
   </div>
   <canvas id="dynoCanvas" height="430"></canvas>
   <div class="note" id="dynoPeaks"></div>
@@ -529,7 +530,7 @@ input[type=range]::-webkit-slider-thumb{
   <div class="table-scroll" id="benchWrap"></div>
   <div class="srcs">
     Published figures sourced from:
-    <a href="https://eureka.patsnap.com/blog/machinery-tech-resources/ls3-engine/" target="_blank">PatSnap  GM LS3 spec sheet</a> ·
+    <a href="https://eureka.patsnap.com/blog/machinery-tech-resources/ls3-engine/" target="_blank">PatSnap - GM LS3 spec sheet</a> ·
     <a href="https://carbuzz.com/ls3-engine/" target="_blank">CarBuzz - LS3</a> ·
     <a href="https://my.prostreetonline.com/2026/08/30/k20a2-vs-k20a3-acura-rsx-engine-differences/" target="_blank">ProStreet - K20A2</a> ·
     <a href="https://www.jdmmeikan.com/cars/dc2" target="_blank">JDM Meikan - B18C Integra Type R</a> ·
@@ -595,16 +596,15 @@ function disp_L(){ return S.cyl*PI/4*Math.pow(S.bore/1000,2)*(S.stroke/1000)*100
 function disp_ci(){ return disp_L()*61.0237; }
 function dcr(){ // dynamic compression ratio from IVC
   const r=S.cr, ivc=S.ivc*PI/180, Rr=S.stroke/1000, half=Rr/2;
-  // rod ratio assumed 1.65 - effective stroke remaining after IVC
   const rod=1.65*S.stroke/1000, a=ivc;
   const x = half*Math.cos(a)+Math.sqrt(Math.max(rod*rod-Math.pow(half*Math.sin(a),2),0));
-  const full = half+rod;                       // at BDC
-  const effStroke = full - x;                  // remaining travel after IVC
+  const full = half+rod;
+  const effStroke = full - x;
   const frac = Math.min(Math.max(effStroke/(2*half),0.3),1);
-  const Veff = frac*(r-1)+1;                   // effective swept ratio
-  return Math.pow(Veff,1)*1 + (r-1)*0 ;        // geometric-effective
+  const Veff = frac*(r-1)+1;
+  return Math.pow(Veff,1)*1 + (r-1)*0 ;
 }
-function dcrReal(){ // more standard: DCR = (Veff_swept + Vclear)/Vclear
+function dcrReal(){
   const r=S.cr, ivc=S.ivc*PI/180;
   const rod=1.65*(S.stroke/1000), half=(S.stroke/1000)/2;
   const x = half*Math.cos(ivc)+Math.sqrt(Math.max(rod*rod-Math.pow(half*Math.sin(ivc),2),0));
@@ -613,40 +613,39 @@ function dcrReal(){ // more standard: DCR = (Veff_swept + Vclear)/Vclear
   const Vc=Vs/(r-1);
   return (frac*Vs+Vc)/Vc;
 }
-function mps(rpm){ return 2*(S.stroke/1000)*rpm/60; } // mean piston speed m/s
+function mps(rpm){ return 2*(S.stroke/1000)*rpm/60; }
 
 /* ═══════════════ BREATHING ═══════════════ */
-function pr_at(rpm){ // pressure ratio available at rpm (boost ramp)
+function pr_at(rpm){
   if(S.asp==='na') return 1;
   const full=S.boostrpm<=0?1500:S.boostrpm;
   let f=Math.min(Math.max((rpm-800)/(full-800),0),1);
-  if(S.asp==='sc') f=Math.min(Math.max(rpm/S.redline,0.15),1); // belt-driven: rises with rpm
+  if(S.asp==='sc') f=Math.min(Math.max(rpm/S.redline,0.15),1);
   const psi=S.boost*f;
   return (S.pamb+psi)/S.pamb;
 }
-function chargeT(rpm){ // manifold charge temp K
+function chargeT(rpm){
   const T1=S.tamb+273.15, pr=pr_at(rpm);
   if(pr<=1.001) return S.iat+273.15;
   const T2=T1*(1+(Math.pow(pr,0.283)-1)/(S.comeff/100));
   return T2-(S.ic/100)*(T2-T1);
 }
 function map_psia(rpm){ return S.pamb*pr_at(rpm); }
-function ve_base(rpm){ // asymmetric Gaussian breathing curve + floor blend + port choke + backpressure
-  let spread=(S.rpmpeak||6000)*(0.85-0.35*(S.cam/100));    // aggressive cam = narrower
-  const pk=S.vemax/100*(1+0.10*(S.cam/100));               // and higher peak
-  if(rpm<S.rpmpeak)spread*=1.6;                            // wider below peak
+function ve_base(rpm){
+  let spread=(S.rpmpeak||6000)*(0.85-0.35*(S.cam/100));
+  const pk=S.vemax/100*(1+0.10*(S.cam/100));
+  if(rpm<S.rpmpeak)spread*=1.6;
   const g=Math.exp(-Math.pow((rpm-S.rpmpeak)/spread,2));
-  let ve=pk*(0.85*g+0.15);                                 // floor blend keeps low-rpm VE realistic
-  ve*=1-Math.max(0,(rpm-S.port)/S.port)*1.4;               // port flow limit
+  let ve=pk*(0.85*g+0.15);
+  ve*=1-Math.max(0,(rpm-S.port)/S.port)*1.4;
   const pr=pr_at(rpm);
-  ve*=1+0.035*(pr-1);                                      // scavenging under boost
-  if(S.asp==='turbo')ve*=1-0.18*(pr-1);                    // exhaust backpressure penalty
+  ve*=1+0.035*(pr-1);
+  if(S.asp==='turbo')ve*=1-0.18*(pr-1);
   if(S.asp==='sc')ve*=1-0.08*(pr-1);
   return Math.min(Math.max(ve,0.25),1.30);
 }
-function ve_at(rpm,mapPsig){ // from user table if present (bilinear), else model
+function ve_at(rpm,mapPsig){
   if(!VE_USER) return ve_base(rpm)*(map_psia(rpm)/S.pamb>1?1:Math.pow(map_psia(rpm)/S.pamb,0.06));
-  // bilinear interp in user grid
   const ri=axisIdx(RPM_COLS,rpm), mi=axisIdx(MAP_ROWS,mapPsig);
   const [i0,i1,fx]=ri,[j0,j1,fy]=mi;
   const g=(a,b)=>VE_USER[a][b]??80;
@@ -662,9 +661,9 @@ function axisIdx(ax,x){
 
 /* ═══════════════ THERMO / TORQUE ═══════════════ */
 const F=FUELS;
-function rho_man(rpm){ return (map_psia(rpm)*PSI2KPA*1000)/(R*chargeT(rpm)); } // kg/m³
+function rho_man(rpm){ return (map_psia(rpm)*PSI2KPA*1000)/(R*chargeT(rpm)); }
 function fmep_kpa(rpm){ const n=rpm/1000; return 30+8*n+1.5*n*n; }
-function afr_at(rpm){ // richer under boost
+function afr_at(rpm){
   const pr=pr_at(rpm);
   return pr>1.05?Math.min(S.afr,F[S.fuel].stoich*0.80):S.afr;
 }
@@ -672,24 +671,24 @@ function knockRetard(rpm){
   const pr=pr_at(rpm), Tm=chargeT(rpm)-273.15;
   const ronReq=88+1.6*(S.cr-7)+0.55*(pr-1)*14.7+0.10*(Tm-40)-1.2*Math.max(0,F[S.fuel].stoich-afr_at(rpm));
   const deficit=Math.max(0,ronReq-F[S.fuel].ron);
-  return deficit*1.5; // degrees of retard needed
+  return deficit*1.5;
 }
 function mbt_at(rpm,loadFrac){ return 10+26*(1-loadFrac)+rpm/300; }
 function imep_kpa(rpm){
   const afr=afr_at(rpm), ve=ve_base(rpm);
   let eta=S.eta/100;
   const ret=knockRetard(rpm);
-  const tqFactor=Math.max(1-0.010*ret,0.80); // ~1%/deg off MBT
-  return eta*(F[S.fuel].lhv/afr)*rho_man(rpm)*ve/1000*tqFactor; // kPa
+  const tqFactor=Math.max(1-0.010*ret,0.80);
+  return eta*(F[S.fuel].lhv/afr)*rho_man(rpm)*ve/1000*tqFactor;
 }
 function torque_lbft(rpm){
   const bmep=imep_kpa(rpm)-fmep_kpa(rpm);
-  const Vd=disp_L()/1000; // m³
+  const Vd=disp_L()/1000;
   const Tnm=bmep*1000*Vd/(4*PI);
   return Math.max(Tnm*0.737562,0);
 }
 function hp_at(rpm){ return torque_lbft(rpm)*rpm/5252; }
-function airflow_kgh(rpm){ // kg/h
+function airflow_kgh(rpm){
   const Vd=disp_L()/1000, ve=ve_base(rpm);
   return rho_man(rpm)*ve*Vd*rpm/2*60;
 }
@@ -729,22 +728,22 @@ function toast(msg){const t=$('toast');t.textContent=msg;t.style.opacity=1;setTi
 function renderDash(){
   const pr=pr_at(S.rpmpeak), pkT=torque_lbft_peak(), pkH=hp_peak();
   const cards=[
-    ['Displacement',disp_L().toFixed(3)+' <small>L</small>',disp_ci().toFixed(1)+' ci · '+S.cyl+' cyl'],
-    ['Per cylinder',(disp_L()/S.cyl*1000).toFixed(0)+' <small>cc</small>','bore '+S.bore+' × stroke '+S.stroke+' mm'],
-    ['Dynamic CR',dcrReal().toFixed(2)+' <small>:1</small>','static '+S.cr+':1 · IVC '+S.ivc+'° ABDC'],
-    ['Peak pressure ratio',pr.toFixed(2)+' <small>PR</small>',(map_psia(S.rpmpeak)).toFixed(1)+' psia absolute'],
-    ['Est. peak power',pkH.hp.toFixed(0)+' <small>hp</small>','@ '+pkH.rpm+' rpm'],
-    ['Est. peak torque',pkT.tq.toFixed(0)+' <small>lb·ft</small>','@ '+pkT.rpm+' rpm · '+ (pkT.tq*1.35582).toFixed(0)+' N·m'],
-    ['BMEP @ peak TQ',((pkT.tq/0.737562)*4*PI/(disp_L()/1000)/1e5).toFixed(1)+' <small>bar</small>','brake mean effective pressure'],
-    ['Max airflow',airflow_cfm(S.rpmpeak).toFixed(0)+' <small>cfm</small>',airflow_kgh(S.rpmpeak).toFixed(0)+' kg/h @ '+S.rpmpeak+' rpm'],
-    ['Charge temp',(chargeT(S.rpmpeak)-273.15).toFixed(0)+' <small>°C</small>','after intercooler @ peak rpm'],
-    ['Max piston speed',mps(S.redline).toFixed(1)+' <small>m/s</small>','@ redline '+S.redline+' rpm'],
-    ['Knock margin',(F[S.fuel].ron-(88+1.6*(S.cr-7)+0.55*(pr_at(S.rpmpeak)-1)*14.7+0.10*(chargeT(S.rpmpeak)-273.15-40))).toFixed(1)+' <small>RON</small>',knockRetard(S.rpmpeak)>0?('<span style="color:var(--red)">retard '+knockRetard(S.rpmpeak).toFixed(1)+'° needed</span>'):'no retard required'],
-    ['Fuel @ peak power',(airflow_kgh(S.rpmpeak)/afr_at(S.rpmpeak)).toFixed(1)+' <small>kg/h</small>',(airflow_kgh(S.rpmpeak)/afr_at(S.rpmpeak)/F[S.fuel].dens*1000).toFixed(1)+' L/h'],
+    ['Displacement',`${disp_L().toFixed(3)} L <small>(${disp_ci().toFixed(1)} ci)</small>`,`${S.cyl} cyl`],
+    ['Per cylinder',`${(disp_L()/S.cyl*1000).toFixed(0)} cc`,`bore ${S.bore} × stroke ${S.stroke} mm`],
+    ['Dynamic CR',`${dcrReal().toFixed(2)} :1`,`static ${S.cr}:1 · IVC ${S.ivc}° ABDC`],
+    ['Peak pressure ratio',`${pr.toFixed(2)} PR`,`${map_psia(S.rpmpeak).toFixed(1)} psia absolute`],
+    ['Est. peak power',`${pkH.hp.toFixed(0)} hp <small>(${(pkH.hp*0.7457).toFixed(1)} kW)</small>`,`@ ${pkH.rpm} rpm`],
+    ['Est. peak torque',`${pkT.tq.toFixed(0)} lb·ft <small>(${(pkT.tq*1.35582).toFixed(1)} N·m)</small>`,`@ ${pkT.rpm} rpm`],
+    ['BMEP @ peak TQ',`${((pkT.tq/0.737562)*4*PI/(disp_L()/1000)/1e5).toFixed(1)} bar`,`brake mean effective pressure`],
+    ['Max airflow',`${airflow_cfm(S.rpmpeak).toFixed(0)} cfm <small>(${airflow_kgh(S.rpmpeak).toFixed(0)} kg/h)</small>`,`@ ${S.rpmpeak} rpm`],
+    ['Charge temp',`${(chargeT(S.rpmpeak)-273.15).toFixed(0)} °C`,`after intercooler @ peak rpm`],
+    ['Max piston speed',`${mps(S.redline).toFixed(1)} m/s`,`@ redline ${S.redline} rpm`],
+    ['Knock margin',`${(F[S.fuel].ron-(88+1.6*(S.cr-7)+0.55*(pr_at(S.rpmpeak)-1)*14.7+0.10*(chargeT(S.rpmpeak)-273.15-40))).toFixed(1)} RON`,knockRetard(S.rpmpeak)>0?`<span style="color:var(--red)">retard ${knockRetard(S.rpmpeak).toFixed(1)}° needed</span>`:'no retard required'],
+    ['Fuel @ peak power',`${(airflow_kgh(S.rpmpeak)/afr_at(S.rpmpeak)).toFixed(1)} kg/h <small>(${((airflow_kgh(S.rpmpeak)/afr_at(S.rpmpeak)/F[S.fuel].dens)*1000).toFixed(1)} L/h)</small>`,F[S.fuel].name],
   ];
   $('dashCards').innerHTML=cards.map(c=>`<div class="stat"><div class="k">${c[0]}</div><div class="v">${c[1]}</div><div class="d">${c[2]}</div></div>`).join('');
   $('sideReadout').innerHTML=
-    `DCR: <b>${dcrReal().toFixed(2)}</b> · Bore×Stroke: <b>${S.bore}×${S.stroke}</b><br>`+
+    `DCR: <b>${dcrReal().toFixed(2)}</b> · Bore×Stroke: <b>${S.bore}×${S.stroke} mm</b><br>`+
     `Disp: <b>${(disp_L()*1000).toFixed(0)} cc</b> · ${(disp_L()*1000/S.cyl).toFixed(0)} cc/cyl<br>`+
     `Peak VE: <b>${S.vemax}%</b> @ <b>${S.rpmpeak}</b> rpm · AFR <b>${S.afr}</b>`;
   const ret=knockRetard(S.rpmpeak);
@@ -762,16 +761,13 @@ function buildAxes(){
 function recalcVE(){
   buildAxes();
   VE_USER=MAP_ROWS.map(mp=>RPM_COLS.map(r=>{
-    const prBoost=1+ (S.asp==='na'?0:(map_psia(r)/S.pamb-1));
     const mapFrac=(mp+14.7)/14.7;
-    // model VE at this rpm, adjusted for pressure (slight rise with boost)
     let v=ve_base(r)*100*(1+0.02*(mapFrac-1)*8);
     return +v.toFixed(1);
   }));
   renderVE();renderDash();
 }
 function veColor(v){
-  // blue→teal→green→yellow→orange→red turbo map 35→115
   const t=Math.min(Math.max((v-35)/80,0),1);
   const stops=[[59,76,192],[45,180,200],[52,199,123],[250,204,21],[251,146,60],[239,68,68]];
   const seg=t*(stops.length-1), i=Math.min(Math.floor(seg),stops.length-2), f=seg-i;
@@ -780,9 +776,9 @@ function veColor(v){
 }
 function renderVE(){
   if(!VE_USER)recalcVESilent();
-  let h='<table class="vegrid"><tr><th class="rowh">MAP\\RPM</th>'+RPM_COLS.map(r=>`<th>${r}</th>`).join('')+'</tr>';
+  let h='<table class="vegrid"><tr><th class="rowh">MAP (psig)\\RPM</th>'+RPM_COLS.map(r=>`<th>${r}</th>`).join('')+'</tr>';
   MAP_ROWS.forEach((mp,j)=>{
-    h+=`<tr><th class="rowh">${mp.toFixed(1)}</th>`;
+    h+=`<tr><th class="rowh" title="${(mp*6.89476).toFixed(1)} kPa">${mp.toFixed(1)}</th>`;
     RPM_COLS.forEach((r,i)=>{
       const v=VE_USER[j][i];
       h+=`<td style="background:${veColor(v)}"><input value="${v.toFixed(1)}" data-j="${j}" data-i="${i}"></td>`;
@@ -817,10 +813,10 @@ function smoothVE(){
 function renderTiming(){
   const rpms=RPM_COLS.length?RPM_COLS:(buildAxes(),RPM_COLS);
   const loads=MAP_ROWS.length?MAP_ROWS:(buildAxes(),MAP_ROWS);
-  let h='<table class="data"><tr><th>MAP\\RPM</th>'+rpms.map(r=>`<th>${r}</th>`).join('')+'</tr>';
+  let h='<table class="data"><tr><th>MAP (psig)\\RPM</th>'+rpms.map(r=>`<th>${r}</th>`).join('')+'</tr>';
   loads.forEach(mp=>{
     const loadFrac=Math.min(Math.max((mp+14.7)/29.4,0),1);
-    h+=`<tr><th>${mp.toFixed(1)} psig</th>`;
+    h+=`<tr><th title="${(mp*6.89476).toFixed(1)} kPa">${mp.toFixed(1)}</th>`;
     rpms.forEach(r=>{
       const mbt=mbt_at(r,loadFrac);
       const ret=knockRetard(r)*loadFrac;
@@ -841,9 +837,9 @@ function renderAFR(){
   loads.forEach(mp=>{
     const pr=(S.pamb+Math.max(mp,0))/S.pamb;
     let afr=pr>1.05?Math.min(S.afr,F[S.fuel].stoich*0.80):F[S.fuel].stoich*(mp>-2?1.0:1.05);
-    if(mp<-2)afr=F[S.fuel].stoich*1.05; // lean cruise
+    if(mp<-2)afr=F[S.fuel].stoich*1.05;
     const lam=afr/F[S.fuel].stoich;
-    a+=`<tr><td>${mp}</td><td class="hl">${afr.toFixed(1)}</td><td>${lam.toFixed(2)}</td><td>${lam<0.85?'cool (rich)':lam>1.02?'hot (lean)':'nominal'}</td></tr>`;
+    a+=`<tr><td>${mp} <small>(${(mp*6.89476).toFixed(0)} kPa)</small></td><td class="hl">${afr.toFixed(1)}</td><td>${lam.toFixed(2)}</td><td>${lam<0.85?'cool (rich)':lam>1.02?'hot (lean)':'nominal'}</td></tr>`;
   });
   a+='</table></div>';
   let b='<div class="card"><h3>IAT Density Correction (ideal gas)</h3><table class="data"><tr><th>IAT °C</th><th>ρ rel.</th><th>Power est.</th><th>Knock margin</th></tr>';
@@ -851,7 +847,7 @@ function renderAFR(){
     const rhoRel=(273.15+25)/(273.15+t);
     const pkw=hp_peak().hp*rhoRel;
     const km=F[S.fuel].ron-(88+1.6*(S.cr-7)+0.55*(pr_at(S.rpmpeak)-1)*14.7+0.10*(t-40));
-    b+=`<tr><td>${t}</td><td>${rhoRel.toFixed(3)}</td><td>${pkw.toFixed(0)} hp</td><td class="${km<0?'neg':'pos'}">${km.toFixed(1)} RON</td></tr>`;
+    b+=`<tr><td>${t}</td><td>${rhoRel.toFixed(3)}</td><td>${pkw.toFixed(0)} hp <small>(${(pkw*0.7457).toFixed(0)} kW)</small></td><td class="${km<0?'neg':'pos'}">${km.toFixed(1)} RON</td></tr>`;
   }
   b+='</table></div>';
   $('afrWrap').innerHTML=a+b;
@@ -861,26 +857,26 @@ function renderAFR(){
 function renderFuel(){
   const pkH=hp_peak();
   const bsfc=F[S.fuel].bsfc;
-  const reqLbhr=pkH.hp*bsfc/0.85;                       // at 85% duty, all injectors
+  const reqLbhr=pkH.hp*bsfc/0.85;
   const perInj=reqLbhr/(S.cyl*S.injpc);
-  const injLbhr=S.inj*0.1575*Math.sqrt(S.fpr/43.5);     // cc/min → lb/hr scaled by pressure
+  const injLbhr=S.inj*0.1575*Math.sqrt(S.fpr/43.5);
   const maxHp=S.cyl*S.injpc*injLbhr*0.85/bsfc;
   const dutyAtPeak=reqLbhr/(S.cyl*S.injpc*injLbhr)*100;
   $('fuelCards').innerHTML=[
-    ['Required flow / injector',perInj.toFixed(1)+' <small>lb/hr</small>','for '+pkH.hp.toFixed(0)+' hp at BSFC '+bsfc+' · 85% duty'],
-    ['Your injector flow',injLbhr.toFixed(1)+' <small>lb/hr</small>',S.inj+' cc/min @ '+S.fpr+' psi'],
-    ['Duty cycle @ peak',dutyAtPeak.toFixed(0)+' <small>%</small>',dutyAtPeak>95?'<span style="color:var(--red)">TOO SMALL - upgrade injectors</span>':dutyAtPeak>85?'<span style="color:var(--yellow)">marginal</span>':'safe'],
-    ['Max supported HP',maxHp.toFixed(0)+' <small>hp</small>','with current injectors @ 85% duty'],
-    ['Fuel flow @ peak',(airflow_kgh(pkH.rpm)/afr_at(pkH.rpm)).toFixed(1)+' <small>kg/h</small>',(airflow_kgh(pkH.rpm)/afr_at(pkH.rpm)/F[S.fuel].dens*1000).toFixed(1)+' L/h of '+F[S.fuel].name],
-    ['Stoich / target AFR',F[S.fuel].stoich+' / '+afr_at(pkH.rpm),'λ = '+(afr_at(pkH.rpm)/F[S.fuel].stoich).toFixed(2)+' at peak power'],
+    ['Required flow / injector',`${perInj.toFixed(1)} lb/hr <small>(${(perInj*0.126).toFixed(1)} g/s)</small>`,`for ${pkH.hp.toFixed(0)} hp at BSFC ${bsfc} · 85% duty`],
+    ['Your injector flow',`${injLbhr.toFixed(1)} lb/hr <small>(${S.inj} cc/min)</small>`, `@ ${S.fpr} psi`],
+    ['Duty cycle @ peak',`${dutyAtPeak.toFixed(0)} %`,dutyAtPeak>95?'<span style="color:var(--red)">TOO SMALL - upgrade injectors</span>':dutyAtPeak>85?'<span style="color:var(--orange)">marginal</span>':'safe'],
+    ['Max supported HP',`${maxHp.toFixed(0)} hp <small>(${(maxHp*0.7457).toFixed(0)} kW)</small>`,`with current injectors @ 85% duty`],
+    ['Fuel flow @ peak',`${(airflow_kgh(pkH.rpm)/afr_at(pkH.rpm)).toFixed(1)} kg/h <small>(${((airflow_kgh(pkH.rpm)/afr_at(pkH.rpm)/F[S.fuel].dens)*1000).toFixed(1)} L/h)</small>`,F[S.fuel].name],
+    ['Stoich / target AFR',`${F[S.fuel].stoich} / ${afr_at(pkH.rpm)}`,`λ = ${(afr_at(pkH.rpm)/F[S.fuel].stoich).toFixed(2)} at peak power`],
   ].map(c=>`<div class="stat"><div class="k">${c[0]}</div><div class="v">${c[1]}</div><div class="d">${c[2]}</div></div>`).join('');
   let h='<table class="data"><tr><th>RPM</th><th>Air kg/h</th><th>Fuel kg/h</th><th>Injector duty %</th><th>ms @ 2-stroke ref</th></tr>';
   for(let r=1000;r<=S.redline;r+=500){
     const air=airflow_kgh(r), fuel=air/afr_at(r);
     const perCylHr=fuel/(S.cyl*S.injpc);
-    const injCapHr=injLbhr*0.453592; // kg/h per inj at 100%
+    const injCapHr=injLbhr*0.453592;
     const duty=perCylHr/injCapHr*100;
-    const ms=duty/100*(60000/(r/2)); // full cycle time
+    const ms=duty/100*(60000/(r/2));
     h+=`<tr><td>${r}</td><td>${air.toFixed(1)}</td><td>${fuel.toFixed(1)}</td><td class="${duty>95?'neg':duty>85?'hl':''}">${duty.toFixed(0)}</td><td>${ms.toFixed(1)}</td></tr>`;
   }
   h+='</table>';
@@ -897,7 +893,7 @@ function renderDyno(){
   }
   drawDyno();
   const pkH=DYNO.reduce((m,d)=>d.hp>m.hp?d:m), pkT=DYNO.reduce((m,d)=>d.tq>m.tq?d:m), pkM=DYNO.reduce((m,d)=>d.map>m.map?d:m);
-  $('dynoPeaks').innerHTML=`Peak hp: <b style="color:var(--cyan)">${pkH.hp.toFixed(0)} @ ${pkH.rpm} rpm</b> &nbsp;|&nbsp; Peak lb·ft: <b style="color:var(--yellow)">${pkT.tq.toFixed(0)} @ ${pkT.rpm} rpm</b> &nbsp;|&nbsp; Peak MAP: <b style="color:var(--green)">${pkM.map.toFixed(1)} psig @ ${pkM.rpm} rpm</b> &nbsp;|&nbsp; Timing: MBT computed ${knockRetard(pkT.rpm)>0.5?'(knock-limited)':''}`;
+  $('dynoPeaks').innerHTML=`Peak hp: <b style="color:var(--cyan)">${pkH.hp.toFixed(0)} hp (${(pkH.hp*0.7457).toFixed(0)} kW)</b> @ ${pkH.rpm} rpm &nbsp;|&nbsp; Peak torque: <b style="color:var(--orange)">${pkT.tq.toFixed(0)} lb·ft (${(pkT.tq*1.35582).toFixed(0)} N·m)</b> @ ${pkT.rpm} rpm &nbsp;|&nbsp; Peak MAP: <b style="color:var(--green)">${pkM.map.toFixed(1)} psig (${(pkM.map*6.89476).toFixed(1)} kPa)</b> @ ${pkM.rpm} rpm &nbsp;|&nbsp; Timing: MBT computed ${knockRetard(pkT.rpm)>0.5?'(knock-limited)':''}`;
 }
 function drawDyno(){
   const cv=$('dynoCanvas'), ctx=cv.getContext('2d');
@@ -912,15 +908,16 @@ function drawDyno(){
   const X=r=>padL+(r-x0)/(x1-x0)*(W-padL-padR);
   const YP=v=>H-padB-v/maxP*(H-padT-padB);
   const YM=v=>H-padB-(v-mapMin)/(mapMax-mapMin)*(H-padT-padB);
-  // grid
-  ctx.strokeStyle='#16212d';ctx.lineWidth=1;ctx.font='10px JetBrains Mono, monospace';ctx.fillStyle='#5c6b7a';
+  
+  ctx.strokeStyle='#e7e5e4';ctx.lineWidth=1;ctx.font='10px Inter, sans-serif';ctx.fillStyle='#78716c';
   for(let i=0;i<=8;i++){const y=padT+i*(H-padT-padB)/8;ctx.beginPath();ctx.moveTo(padL,y);ctx.lineTo(W-padR,y);ctx.stroke();
     const val=maxP*(1-i/8);ctx.textAlign='right';ctx.fillText(val.toFixed(0),padL-8,y+3);
-    if(show.map){const mv=mapMin+(mapMax-mapMin)*(1-i/8);ctx.textAlign='left';ctx.fillStyle='#3a5f4c';ctx.fillText(mv.toFixed(1),W-padR+8,y+3);ctx.fillStyle='#5c6b7a';}}
+    if(show.map){const mv=mapMin+(mapMax-mapMin)*(1-i/8);ctx.textAlign='left';ctx.fillStyle='#10b981';ctx.fillText(mv.toFixed(1),W-padR+8,y+3);ctx.fillStyle='#78716c';}}
   const step=x1-x0>3000?1000:500;
   for(let r=Math.ceil(x0/step)*step;r<=x1;r+=step){const x=X(r);ctx.beginPath();ctx.moveTo(x,padT);ctx.lineTo(x,H-padB);ctx.stroke();ctx.textAlign='center';ctx.fillText(r,x,H-padB+16);}
-  ctx.fillStyle='#5c6b7a';ctx.textAlign='center';ctx.fillText('RPM',(W)/2,H-6);
-  if(show.map){ctx.save();ctx.translate(14,H/2);ctx.rotate(-PI/2);ctx.fillText('psig',0,0);ctx.restore();}
+  ctx.fillStyle='#78716c';ctx.textAlign='center';ctx.fillText('RPM',(W)/2,H-6);
+  if(show.map){ctx.save();ctx.translate(14,H/2);ctx.rotate(-PI/2);ctx.fillText('psig / kPa',0,0);ctx.restore();}
+  
   function plot(key,color,dash){
     ctx.strokeStyle=color;ctx.lineWidth=2;ctx.setLineDash(dash||[]);
     ctx.shadowColor=color;ctx.shadowBlur=8;
@@ -928,34 +925,34 @@ function drawDyno(){
     DYNO.forEach((d,i)=>{const x=X(d.rpm),y=key==='map'?YM(d.map):YP(d[key]);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
     ctx.stroke();ctx.setLineDash([]);ctx.shadowBlur=0;
   }
-  if(show.map)plot('map','#34d399');
-  if(show.tq)plot('tq','#fbbf24',[8,6]);
-  if(show.hp)plot('hp','#22d3ee');
-  // hover
+  if(show.map)plot('map','#10b981');
+  if(show.tq)plot('tq','#f59e0b',[8,6]);
+  if(show.hp)plot('hp','#d97706');
+  
   cv.onmousemove=e=>{
     const rect=cv.getBoundingClientRect(),mx=e.clientX-rect.left;
     const r=x0+(mx-padL)/(W-padL-padR)*(x1-x0);
     const d=DYNO.reduce((best,dd)=>Math.abs(dd.rpm-r)<Math.abs(best.rpm-r)?dd:best);
     drawDynoBase(W,H,padL,padR,padT,padB);
-    ctx.strokeStyle='rgba(219,228,236,.25)';ctx.beginPath();ctx.moveTo(X(d.rpm),padT);ctx.lineTo(X(d.rpm),H-padB);ctx.stroke();
-    ctx.fillStyle='#0d141d';ctx.strokeStyle='#263647';
-    const bx=Math.min(Math.max(mx-70,padL),W-padR-140),by=padT+10;
-    ctx.fillRect(bx,by,140,66);ctx.strokeRect(bx,by,140,66);
-    ctx.fillStyle='#dbe4ec';ctx.textAlign='left';ctx.font='11px JetBrains Mono, monospace';
-    ctx.fillText(d.rpm+' rpm',bx+10,by+16);
-    ctx.fillStyle='#22d3ee';ctx.fillText(d.hp.toFixed(1)+' hp',bx+10,by+32);
-    ctx.fillStyle='#fbbf24';ctx.fillText(d.tq.toFixed(1)+' lb·ft',bx+10,by+46);
-    ctx.fillStyle='#34d399';ctx.fillText(d.map.toFixed(1)+' psig MAP',bx+10,by+60);
+    ctx.strokeStyle='rgba(28,25,23,.25)';ctx.beginPath();ctx.moveTo(X(d.rpm),padT);ctx.lineTo(X(d.rpm),H-padB);ctx.stroke();
+    ctx.fillStyle='#fff';ctx.strokeStyle='#e7e5e4';
+    const bx=Math.min(Math.max(mx-80,padL),W-padR-160),by=padT+10;
+    ctx.fillRect(bx,by,160,84);ctx.strokeRect(bx,by,160,84);
+    ctx.fillStyle='#1c1917';ctx.textAlign='left';ctx.font='11px Inter, sans-serif';
+    ctx.fillText(`${d.rpm} rpm`,bx+10,by+16);
+    ctx.fillStyle='#d97706';ctx.fillText(`${d.hp.toFixed(1)} hp (${(d.hp*0.7457).toFixed(1)} kW)`,bx+10,by+32);
+    ctx.fillStyle='#f59e0b';ctx.fillText(`${d.tq.toFixed(1)} lb·ft (${(d.tq*1.35582).toFixed(1)} N·m)`,bx+10,by+48);
+    ctx.fillStyle='#10b981';ctx.fillText(`${d.map.toFixed(1)} psig (${(d.map*6.89476).toFixed(1)} kPa)`,bx+10,by+64);
   };
-  function drawDynoBase(){ /* full redraw on hover */ 
+  function drawDynoBase(){
     const ctx2=cv.getContext('2d');ctx2.save();ctx2.setTransform(2,0,0,2,0,0);ctx2.clearRect(0,0,W,H);
-    ctx2.strokeStyle='#16212d';ctx2.lineWidth=1;ctx2.font='10px JetBrains Mono, monospace';
+    ctx2.strokeStyle='#e7e5e4';ctx2.lineWidth=1;ctx2.font='10px Inter, sans-serif';
     for(let i=0;i<=8;i++){const y=padT+i*(H-padT-padB)/8;ctx2.beginPath();ctx2.moveTo(padL,y);ctx2.lineTo(W-padR,y);ctx2.stroke();
-      ctx2.fillStyle='#5c6b7a';ctx2.textAlign='right';ctx2.fillText((maxP*(1-i/8)).toFixed(0),padL-8,y+3);
-      if(show.map){ctx2.textAlign='left';ctx2.fillStyle='#3a5f4c';ctx2.fillText((mapMin+(mapMax-mapMin)*(1-i/8)).toFixed(1),W-padR+8,y+3);}}
-    for(let r=Math.ceil(x0/step)*step;r<=x1;r+=step){const x=X(r);ctx2.beginPath();ctx2.moveTo(x,padT);ctx2.lineTo(x,H-padB);ctx2.stroke();ctx2.fillStyle='#5c6b7a';ctx2.textAlign='center';ctx2.fillText(r,x,H-padB+16);}
+      ctx2.fillStyle='#78716c';ctx2.textAlign='right';ctx2.fillText((maxP*(1-i/8)).toFixed(0),padL-8,y+3);
+      if(show.map){ctx2.textAlign='left';ctx2.fillStyle='#10b981';ctx2.fillText((mapMin+(mapMax-mapMin)*(1-i/8)).toFixed(1),W-padR+8,y+3);}}
+    for(let r=Math.ceil(x0/step)*step;r<=x1;r+=step){const x=X(r);ctx2.beginPath();ctx2.moveTo(x,padT);ctx2.lineTo(x,H-padB);ctx2.stroke();ctx2.fillStyle='#78716c';ctx2.textAlign='center';ctx2.fillText(r,x,H-padB+16);}
     function p2(key,color,dash){ctx2.strokeStyle=color;ctx2.lineWidth=2;ctx2.setLineDash(dash||[]);ctx2.shadowColor=color;ctx2.shadowBlur=8;ctx2.beginPath();DYNO.forEach((d,i)=>{const x=X(d.rpm),y=key==='map'?YM(d.map):YP(d[key]);i?ctx2.lineTo(x,y):ctx2.moveTo(x,y);});ctx2.stroke();ctx2.setLineDash([]);ctx2.shadowBlur=0;}
-    if(show.map)p2('map','#34d399');if(show.tq)p2('tq','#fbbf24',[8,6]);if(show.hp)p2('hp','#22d3ee');
+    if(show.map)p2('map','#10b981');if(show.tq)p2('tq','#f59e0b',[8,6]);if(show.hp)p2('hp','#d97706');
     ctx2.restore();
   }
   cv._redraw=drawDynoBase;
@@ -991,19 +988,19 @@ function runBenchmark(b){
 }
 function renderBench(){
   BENCH_RES=BENCHMARKS.map(b=>({b,...runBenchmark(b)}));
-  let h='<table class="data"><tr><th>Engine</th><th>Application</th><th>Published hp</th><th>Model hp</th><th>Δ hp</th><th>Published lb·ft</th><th>Model lb·ft</th><th>Δ tq</th><th>Source</th><th></th></tr>';
+  let h='<table class="data"><tr><th>Engine</th><th>Application</th><th>Pub hp (kW)</th><th>Model hp (kW)</th><th>Δ hp</th><th>Pub lb·ft (N·m)</th><th>Model lb·ft (N·m)</th><th>Δ tq</th><th>Source</th><th></th></tr>';
   BENCH_RES.forEach((r,k)=>{
     const dH=(r.hpPred/r.b.pubHp-1)*100, dT=(r.tqPred/r.b.pubTq-1)*100;
     const cls=d=>Math.abs(d)<6?'pos':Math.abs(d)<12?'hl':'neg';
     h+=`<tr><td style="text-align:left">${r.b.name}</td><td style="text-align:left;color:var(--dim)">${r.b.car}</td>`+
-       `<td>${r.b.pubHp} @ ${r.b.pubHpRpm}</td><td class="hl">${r.hpPred.toFixed(0)}</td><td class="${cls(dH)}">${dH>=0?'+':''}${dH.toFixed(1)}%</td>`+
-       `<td>${r.b.pubTq} @ ${r.b.pubTqRpm}</td><td class="hl">${r.tqPred.toFixed(0)}</td><td class="${cls(dT)}">${dT>=0?'+':''}${dT.toFixed(1)}%</td>`+
-       `<td style="color:var(--dimmer)">${r.b.src}</td><td><button onclick="loadBench(${k})">Load into model</button></td></tr>`;
+       `<td>${r.b.pubHp} <small>(${(r.b.pubHp*0.7457).toFixed(0)})</small> @ ${r.b.pubHpRpm}</td><td class="hl">${r.hpPred.toFixed(0)} <small>(${(r.hpPred*0.7457).toFixed(0)})</small></td><td class="${cls(dH)}">${dH>=0?'+':''}${dH.toFixed(1)}%</td>`+
+       `<td>${r.b.pubTq} <small>(${(r.b.pubTq*1.35582).toFixed(0)})</small> @ ${r.b.pubTqRpm}</td><td class="hl">${r.tqPred.toFixed(0)} <small>(${(r.tqPred*1.35582).toFixed(0)})</small></td><td class="${cls(dT)}">${dT>=0?'+':''}${dT.toFixed(1)}%</td>`+
+       `<td style="color:var(--dimmer)">${r.b.src}</td><td><button onclick="loadBench(${k})">Load</button></td></tr>`;
   });
   h+='</table>';
   const avgH=BENCH_RES.reduce((s,r)=>s+Math.abs(r.hpPred/r.b.pubHp-1),0)/BENCH_RES.length*100;
   const avgT=BENCH_RES.reduce((s,r)=>s+Math.abs(r.tqPred/r.b.pubTq-1),0)/BENCH_RES.length*100;
-  h+=`<div class="note">Mean absolute error: <b style="color:var(--cyan)">${avgH.toFixed(1)}%</b> on power, <b style="color:var(--cyan)">${avgT.toFixed(1)}%</b> on torque across ${BENCH_RES.length} production engines. “Load into model” pushes that engine's parameters into the sidebar so you can explore it in every other tab.</div>`;
+  h+=`<div class="note">Mean absolute error: <b style="color:var(--cyan)">${avgH.toFixed(1)}%</b> on power, <b style="color:var(--cyan)">${avgT.toFixed(1)}%</b> on torque across ${BENCH_RES.length} production engines. "Load" pushes that engine's parameters into the sidebar.</div>`;
   $('benchWrap').innerHTML=h;
 }
 function loadBench(k){
@@ -1017,7 +1014,7 @@ function loadBench(k){
 function dl(name,rows){
   const csv=rows.map(r=>r.map(c=>{c=String(c);return /[",\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c;}).join(',')).join('\n');
   const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8'}));
+  a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'}));
   a.download=name; a.click(); URL.revokeObjectURL(a.href);
 }
 function exportCSV(kind){
@@ -1035,32 +1032,33 @@ function exportCSV(kind){
     dl(pn+'_timing_MBT.csv',rows);
   }
   if(kind==='afr'){
-    const rows=[['MAP_psig','AFR','lambda']];
+    const rows=[['MAP_psig','MAP_kPa','AFR','lambda']];
     for(let mp=-14;mp<=30;mp+=2){
       const pr=(S.pamb+Math.max(mp,0))/S.pamb;
       let afr=pr>1.05?Math.min(S.afr,F[S.fuel].stoich*0.80):F[S.fuel].stoich*(mp>-2?1.0:1.05);
-      rows.push([mp,+afr.toFixed(2),+(afr/F[S.fuel].stoich).toFixed(3)]);
+      rows.push([mp,+(mp*6.89476).toFixed(1),+afr.toFixed(2),+(afr/F[S.fuel].stoich).toFixed(3)]);
     }
     dl(pn+'_AFR_table.csv',rows);
   }
   if(kind==='fuel'){
     const injLbhr=S.inj*0.1575*Math.sqrt(S.fpr/43.5);
-    const rows=[['RPM','air_kg_h','fuel_kg_h','injector_duty_pct','hp','torque_lbft']];
+    const rows=[['RPM','air_kg_h','fuel_kg_h','fuel_g_s','injector_duty_pct','hp','kW','torque_lbft','torque_Nm']];
     for(let r=1000;r<=S.redline;r+=250){
       const air=airflow_kgh(r),fuel=air/afr_at(r);
-      rows.push([r,+air.toFixed(1),+fuel.toFixed(2),+(fuel/(S.cyl*S.injpc)/(injLbhr*0.453592)*100).toFixed(1),+hp_at(r).toFixed(1),+torque_lbft(r).toFixed(1)]);
+      const hp=hp_at(r), tq=torque_lbft(r);
+      rows.push([r,+air.toFixed(1),+fuel.toFixed(2),+(fuel/3.6).toFixed(1),+(fuel/(S.cyl*S.injpc)/(injLbhr*0.453592)*100).toFixed(1),+hp.toFixed(1),+(hp*0.7457).toFixed(1),+tq.toFixed(1),+(tq*1.35582).toFixed(1)]);
     }
     dl(pn+'_fuel_system.csv',rows);
   }
   if(kind==='dyno'){
     if(!DYNO.length)renderDyno();
-    dl(pn+'_dyno_sim.csv',[['RPM','hp','torque_lbft','MAP_psig','VE_pct','AFR','IMEP_kPa','BMEP_kPa'],
-      ...DYNO.map(d=>[d.rpm,+d.hp.toFixed(1),+d.tq.toFixed(1),+d.map.toFixed(2),+(ve_base(d.rpm)*100).toFixed(1),+afr_at(d.rpm).toFixed(2),+imep_kpa(d.rpm).toFixed(0),+(imep_kpa(d.rpm)-fmep_kpa(d.rpm)).toFixed(0)])]);
+    dl(pn+'_dyno_sim.csv',[['RPM','hp','kW','torque_lbft','torque_Nm','MAP_psig','MAP_kPa','VE_pct','AFR','IMEP_kPa','BMEP_kPa'],
+      ...DYNO.map(d=>[d.rpm,+d.hp.toFixed(1),+(d.hp*0.7457).toFixed(1),+d.tq.toFixed(1),+(d.tq*1.35582).toFixed(1),+d.map.toFixed(2),+(d.map*6.89476).toFixed(1),+(ve_base(d.rpm)*100).toFixed(1),+afr_at(d.rpm).toFixed(2),+imep_kpa(d.rpm).toFixed(0),+(imep_kpa(d.rpm)-fmep_kpa(d.rpm)).toFixed(0)])]);
   }
   if(kind==='bench'){
     if(!BENCH_RES.length)renderBench();
-    dl('benchmark_theory_vs_published.csv',[['Engine','Application','Published hp','@rpm','Model hp','Delta hp %','Published lb-ft','@rpm','Model lb-ft','Delta tq %','Source'],
-      ...BENCH_RES.map(r=>[r.b.name,r.b.car,r.b.pubHp,r.b.pubHpRpm,+r.hpPred.toFixed(1),+((r.hpPred/r.b.pubHp-1)*100).toFixed(1),r.b.pubTq,r.b.pubTqRpm,+r.tqPred.toFixed(1),+((r.tqPred/r.b.pubTq-1)*100).toFixed(1),r.b.src])]);
+    dl('benchmark_theory_vs_published.csv',[['Engine','Application','Pub hp','Pub kW','Model hp','Model kW','Delta hp %','Pub lb-ft','Pub Nm','Model lb-ft','Model Nm','Delta tq %','Source'],
+      ...BENCH_RES.map(r=>[r.b.name,r.b.car,r.b.pubHp,+(r.b.pubHp*0.7457).toFixed(1),+r.hpPred.toFixed(1),+(r.hpPred*0.7457).toFixed(1),+((r.hpPred/r.b.pubHp-1)*100).toFixed(1),r.b.pubTq,+(r.b.pubTq*1.35582).toFixed(1),+r.tqPred.toFixed(1),+(r.tqPred*1.35582).toFixed(1),+((r.tqPred/r.b.pubTq-1)*100).toFixed(1),r.b.src])]);
   }
   toast('CSV exported');
 }

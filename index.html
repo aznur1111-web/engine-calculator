@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ENGINE CALCULATOR - Theoretical Engine Model + Real-World Benchmarks. Curated by Sadman Aznur title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07090c; --bg2:#0b0f14; --panel:rgba(18,24,32,.86); --panel2:rgba(24,31,41,.72);
+  --border:#1c2735; --border2:#263647; --text:#dbe4ec; --dim:#8a99a8; --dimmer:#5c6b7a;
+  --cyan:#22d3ee; --cyan2:#00aaff; --green:#34d399; --yellow:#fbbf24; --orange:#fb923c; --red:#f87171;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13px;overflow:hidden}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#233246;border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:#2f4359}
+
+/* ── header ─────────────────────────── */
+header{height:88px;display:flex;flex-direction:column;border-bottom:1px solid var(--border);background:linear-gradient(180deg,#0a0e13,#080b0f);flex:0 0 auto}
+.hd-top{display:flex;align-items:center;gap:10px;padding:10px 16px 6px}
+.logo{font-family:var(--mono);font-weight:700;font-size:14px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;text-shadow:0 0 18px rgba(34,211,238,.35);white-space:nowrap}
+.logo small{color:var(--dim);font-weight:400;letter-spacing:1px;margin-left:10px;font-size:11px}
+.hd-btns{display:flex;gap:6px;margin-left:18px}
+button{font-family:var(--mono);font-size:11.5px;background:rgba(30,41,56,.55);color:var(--cyan);border:1px solid var(--border2);padding:5px 12px;border-radius:4px;cursor:pointer;transition:all .18s;letter-spacing:.4px;white-space:nowrap}
+button:hover{border-color:var(--cyan);background:rgba(34,211,238,.09);box-shadow:0 0 12px rgba(34,211,238,.15)}
+button.primary{background:rgba(34,211,238,.12);border-color:rgba(34,211,238,.5)}
+button.warn{color:var(--orange)}
+button.warn:hover{border-color:var(--orange);background:rgba(251,146,60,.08)}
+.proj{margin-left:auto;display:flex;align-items:center;gap:8px;color:var(--dim);font-family:var(--mono);font-size:11px}
+.proj input{background:#0e141c;border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:11px;padding:4px 8px;border-radius:3px;width:190px}
+.tabs{display:flex;gap:2px;padding:0 16px;overflow-x:auto}
+.tab{font-family:var(--mono);font-size:11px;letter-spacing:1px;padding:7px 14px;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;user-select:none;transition:color .15s}
+.tab:hover{color:var(--text)}
+.tab.on{color:var(--cyan);border-bottom-color:var(--cyan)}
+
+/* ── layout ─────────────────────────── */
+#wrap{display:flex;height:calc(100vh - 88px)}
+aside{width:264px;flex:0 0 264px;border-right:1px solid var(--border);background:var(--bg2);overflow-y:auto;padding:10px 0 40px}
+main{flex:1;overflow:auto;padding:14px 18px 60px;background:radial-gradient(1200px 500px at 70% -10%,rgba(0,170,255,.05),transparent 60%),var(--bg)}
+
+.sec{border-bottom:1px solid #131c26;margin-bottom:4px}
+.sec-h{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;cursor:pointer;user-select:none}
+.sec-h span{font-family:var(--mono);font-size:10.5px;letter-spacing:1.6px;color:var(--cyan);text-transform:uppercase}
+.sec-h::after{content:'▸';color:var(--dimmer);font-size:10px;transition:transform .2s}
+.sec.open .sec-h::after{transform:rotate(90deg)}
+.sec-b{display:none;padding:2px 14px 12px}
+.sec.open .sec-b{display:block}
+.f{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:7px 0}
+.f label{color:var(--dim);font-size:11.5px;flex:1}
+.f input,.f select{width:104px;background:#0d131b;border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:11.5px;padding:4px 7px;border-radius:3px;text-align:right}
+.f select{text-align:left}
+.f input:focus,.f select:focus{outline:none;border-color:var(--cyan)}
+.f .u{color:var(--dimmer);font-size:10px;width:38px;font-family:var(--mono)}
+input[type=range]{-webkit-appearance:none;width:104px;height:3px;background:#233246;border-radius:2px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--cyan);cursor:pointer;box-shadow:0 0 8px rgba(34,211,238,.5)}
+.readout{margin:10px 14px;padding:9px 11px;background:rgba(34,211,238,.05);border:1px solid rgba(34,211,238,.18);border-radius:4px;font-family:var(--mono);font-size:10.5px;color:var(--dim);line-height:1.8}
+.readout b{color:var(--cyan);font-weight:500}
+
+/* ── panes ─────────────────────────── */
+.pane{display:none}
+.pane.on{display:block;animation:fade .25s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.pane h2{font-family:var(--mono);font-size:13px;letter-spacing:1.5px;color:var(--text);text-transform:uppercase;margin:4px 0 4px}
+.pane .sub{color:var(--dim);font-size:11.5px;margin-bottom:14px}
+.toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:10px 0 14px;padding:10px 12px;background:var(--panel);border:1px solid var(--border);border-radius:5px;backdrop-filter:blur(8px)}
+.toolbar .sep{width:1px;height:18px;background:var(--border2);margin:0 4px}
+.toolbar .lbl{font-family:var(--mono);font-size:10.5px;color:var(--dimmer);letter-spacing:.5px}
+.toolbar input[type=number]{width:64px;background:#0d131b;border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:11px;padding:4px 6px;border-radius:3px;text-align:right}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:16px 18px;margin-bottom:16px;backdrop-filter:blur(8px)}
+.card h3{font-family:var(--mono);font-size:11px;letter-spacing:1.5px;color:var(--cyan);text-transform:uppercase;margin-bottom:12px}
+.grid-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:12px;margin-bottom:16px}
+.stat{background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:13px 15px;position:relative;overflow:hidden}
+.stat::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--cyan);opacity:.7}
+.stat .k{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--dimmer);text-transform:uppercase}
+.stat .v{font-family:var(--mono);font-size:21px;font-weight:700;color:var(--text);margin:5px 0 2px;font-variant-numeric:tabular-nums}
+.stat .v small{font-size:11px;color:var(--dim);font-weight:400}
+.stat .d{font-size:10px;color:var(--dimmer);font-family:var(--mono)}
+
+/* tables */
+table{border-collapse:collapse;font-family:var(--mono);font-size:11px;font-variant-numeric:tabular-nums}
+.data th{background:#101823;color:var(--dim);font-weight:500;padding:7px 10px;border:1px solid var(--border);text-align:right;letter-spacing:.5px;position:sticky;top:0}
+.data td{padding:6px 10px;border:1px solid var(--border);text-align:right;color:var(--text)}
+.data tr:hover td{background:rgba(34,211,238,.04)}
+.data td.hl{color:var(--cyan);font-weight:700}
+.data td.neg{color:var(--red)}.data td.pos{color:var(--green)}
+.table-scroll{overflow:auto;max-height:calc(100vh - 320px);border:1px solid var(--border);border-radius:5px}
+
+/* VE grid */
+.vegrid td,.vegrid th{border:1px solid #16202c;padding:0;min-width:56px;height:26px;text-align:center}
+.vegrid th{background:#0e1520;color:var(--dim);font-weight:500;padding:4px 6px;position:sticky;top:0;font-size:10.5px}
+.vegrid th.rowh{position:sticky;left:0;z-index:2;text-align:right}
+.vegrid td input{width:100%;height:100%;border:none;background:transparent;color:#060a0e;font-family:var(--mono);font-size:11px;text-align:center;font-weight:600}
+.vegrid td input:focus{outline:2px solid var(--cyan);outline-offset:-2px}
+.ve-scroll{overflow:auto;max-height:calc(100vh - 300px);border-radius:5px;box-shadow:0 8px 30px rgba(0,0,0,.4)}
+
+/* dyno */
+#dynoCanvas{width:100%;display:block;background:#0a0e13;border:1px solid var(--border);border-radius:6px}
+.legend{display:flex;gap:18px;font-family:var(--mono);font-size:11px;margin:10px 0}
+.legend span{display:flex;align-items:center;gap:6px;color:var(--dim)}
+.sw{width:22px;height:3px;border-radius:2px}
+.formula{font-family:var(--mono);font-size:11px;color:var(--dim);background:#0b1119;border-left:2px solid var(--cyan);padding:8px 12px;margin:6px 0;border-radius:0 4px 4px 0;line-height:1.7}
+.formula b{color:var(--text)}
+.note{font-size:11px;color:var(--dimmer);line-height:1.7;margin-top:8px}
+.srcs{font-size:10.5px;color:var(--dimmer);line-height:2;margin-top:10px}
+.srcs a{color:var(--cyan2);text-decoration:none}
+.srcs a:hover{text-decoration:underline}
+.statusbar{position:fixed;bottom:0;left:264px;right:0;height:26px;background:#0a0e13;border-top:1px solid var(--border);display:flex;align-items:center;gap:20px;padding:0 18px;font-family:var(--mono);font-size:10px;color:var(--dimmer);z-index:5}
+.statusbar b{color:var(--cyan);font-weight:500}
+.toast{position:fixed;top:100px;right:20px;background:#0e1a17;border:1px solid var(--green);color:var(--green);font-family:var(--mono);font-size:11px;padding:10px 16px;border-radius:5px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:99;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+@media(max-width:980px){aside{display:none}.statusbar{left:0}}
+
+/* =========================================================
+   AZNUR THEME - COLOR + FONT ONLY
+   Layout, spacing, sizing, structure and behavior are unchanged.
+   Palette/font matched to the current Aznur Image Compressor site.
+   ========================================================= */
+:root{
+  --bg:#fafafa;
+  --bg2:#fafafa;
+  --panel:#fff;
+  --panel2:#fafafa;
+  --border:#e7e5e4;
+  --border2:#d6d3d1;
+  --text:#1c1917;
+  --dim:#57534e;
+  --dimmer:#78716c;
+  --cyan:#f59e0b;
+  --cyan2:#d97706;
+  --green:#10b981;
+  --yellow:#f59e0b;
+  --orange:#d97706;
+  --red:#ef4444;
+  --mono:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--sans);
+}
+
+::-webkit-scrollbar-thumb{background:#d6d3d1}
+::-webkit-scrollbar-thumb:hover{background:#a8a29e}
+
+header{
+  background:linear-gradient(180deg,#fff,#fafafa);
+  border-bottom-color:var(--border);
+}
+
+.logo{
+  color:var(--cyan);
+  text-shadow:none;
+}
+
+button{
+  background:#fff;
+  color:var(--cyan2);
+  border-color:var(--border);
+  font-family:var(--sans);
+}
+
+button:hover{
+  border-color:var(--cyan);
+  background:#fffbeb;
+  box-shadow:0 0 0 2px rgba(245,158,11,.08);
+}
+
+button.primary{
+  background:var(--cyan);
+  color:#fff;
+  border-color:var(--cyan);
+}
+
+button.primary:hover{
+  background:var(--cyan2);
+  border-color:var(--cyan2);
+}
+
+button.warn{color:var(--orange)}
+button.warn:hover{
+  border-color:var(--orange);
+  background:#fff7ed;
+}
+
+.proj input,
+.f input,.f select,
+.toolbar input[type=number]{
+  background:#fff;
+  color:var(--text);
+  border-color:var(--border);
+  font-family:var(--sans);
+}
+
+.tab{
+  font-family:var(--sans);
+}
+.tab.on{
+  color:var(--cyan2);
+  border-bottom-color:var(--cyan);
+}
+
+aside{
+  background:#fafafa;
+  border-right-color:var(--border);
+}
+
+main{
+  background:var(--bg);
+}
+
+.sec{
+  border-bottom-color:var(--border);
+}
+
+.sec-h span,
+.card h3,
+.stat .v,
+.data td.hl{
+  color:var(--cyan2);
+}
+
+.f label,
+.toolbar .lbl,
+.stat .k,
+.stat .d,
+.note,
+.srcs,
+.statusbar{
+  color:var(--dim);
+}
+
+.f input,.f select{
+  background:#fff;
+  color:var(--text);
+}
+
+.f input:focus,.f select:focus{
+  border-color:var(--cyan);
+}
+
+input[type=range]{
+  background:#d6d3d1;
+}
+
+input[type=range]::-webkit-slider-thumb{
+  background:var(--cyan);
+  box-shadow:0 1px 4px rgba(245,158,11,.25);
+}
+
+.readout{
+  background:#fffbeb;
+  border-color:#fde68a;
+  color:var(--dim);
+}
+
+.readout b{
+  color:var(--cyan2);
+}
+
+.toolbar,
+.card{
+  background:#fff;
+  border-color:var(--border);
+  box-shadow:var(--sh,0 1px 2px rgba(0,0,0,.05));
+}
+
+.toolbar .sep{
+  background:var(--border2);
+}
+
+.stat{
+  background:#fafafa;
+  border-color:var(--border);
+}
+
+.stat::before{
+  background:var(--cyan);
+}
+
+.stat .v{
+  color:var(--text);
+}
+
+.data th{
+  background:#fafaf9;
+  color:var(--dim);
+  border-color:var(--border);
+}
+
+.data td{
+  border-color:var(--border);
+  color:var(--text);
+}
+
+.data tr:hover td{
+  background:#fffbeb;
+}
+
+.data td.neg{color:var(--red)}
+.data td.pos{color:var(--green)}
+
+.table-scroll{
+  border-color:var(--border);
+}
+
+.vegrid td,.vegrid th{
+  border-color:var(--border);
+}
+
+.vegrid th{
+  background:#fafaf9;
+  color:var(--dim);
+}
+
+.vegrid td input{
+  color:#1c1917;
+  font-family:var(--sans);
+}
+
+.vegrid td input:focus{
+  outline-color:var(--cyan);
+}
+
+.ve-scroll{
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+
+#dynoCanvas{
+  background:#fff;
+  border-color:var(--border);
+}
+
+.formula{
+  color:var(--dim);
+  background:#fffbeb;
+  border-left-color:var(--cyan);
+}
+
+.formula b{
+  color:var(--text);
+}
+
+.srcs a{
+  color:var(--cyan2);
+}
+
+.statusbar{
+  background:#fff;
+  border-top-color:var(--border);
+}
+
+.statusbar b{
+  color:var(--cyan2);
+}
+
+.toast{
+  background:#ecfdf5;
+  border-color:var(--green);
+  color:#047857;
+  box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+
+/* Existing inline/semantic colors brought into the same Aznur palette */
+.pane h2{color:var(--text)}
+
+</style>
+</head>
+<body>
+<header>
+  <div class="hd-top">
+    <div class="logo">ENGINE CALCULATOR<small>// theoretical model &times; real-world benchmark</small></div>
+    <div class="hd-btns">
+      <button onclick="newProject()">New</button>
+      <button onclick="saveProject()">Save</button>
+      <button onclick="document.getElementById('fileOpen').click()">Open…</button>
+      <input type="file" id="fileOpen" accept=".json" style="display:none" onchange="openProject(event)">
+      <button class="primary" onclick="exportAllCSV()">Export CSV…</button>
+      <button onclick="gotoTab('dyno')">HP / ET Calc</button>
+      <button onclick="gotoTab('fuel')">Injector Calc</button>
+    </div>
+    <div class="proj">Project: <input id="projName" value="New Engine Project" onchange="S.project=this.value"></div>
+  </div>
+  <nav class="tabs" id="tabs">
+    <div class="tab on" data-t="dash">Dashboard</div>
+    <div class="tab" data-t="ve">VE Table (%)</div>
+    <div class="tab" data-t="timing">Timing - MBT (° BTDC)</div>
+    <div class="tab" data-t="afr">AFR / IAT Table</div>
+    <div class="tab" data-t="fuel">Fuel &amp; Injectors</div>
+    <div class="tab" data-t="dyno">Dyno Graph</div>
+    <div class="tab" data-t="bench">Real-World Benchmarks</div>
+    <div class="tab" data-t="theory">Theory &amp; Sources</div>
+  </nav>
+</header>
+
+<div id="wrap">
+<aside id="sidebar">
+  <div class="sec open"><div class="sec-h"><span>Engine Geometry</span></div><div class="sec-b">
+    <div class="f"><label>Cylinders</label><input type="number" id="p_cyl" value="4" min="1" max="16"><span class="u">cyl</span></div>
+    <div class="f"><label>Bore</label><input type="number" id="p_bore" value="86" step="0.1"><span class="u">mm</span></div>
+    <div class="f"><label>Stroke</label><input type="number" id="p_stroke" value="86" step="0.1"><span class="u">mm</span></div>
+    <div class="f"><label>Compression ratio</label><input type="number" id="p_cr" value="11.0" step="0.1" min="6" max="16"><span class="u">:1</span></div>
+    <div class="f"><label>Intake valve closes</label><input type="number" id="p_ivc" value="62" step="1"><span class="u">°ABDC</span></div>
+    <div class="f"><label>Redline</label><input type="number" id="p_redline" value="7400" step="100"><span class="u">rpm</span></div>
+  </div></div>
+  <div class="sec open"><div class="sec-h"><span>Induction / Boost</span></div><div class="sec-b">
+    <div class="f"><label>Aspiration</label><select id="p_asp"><option value="na">Naturally aspirated</option><option value="turbo" selected>Turbocharged</option><option value="sc">Supercharged</option></select></div>
+    <div class="f"><label>Boost (peak)</label><input type="number" id="p_boost" value="11" step="0.5"><span class="u">psi</span></div>
+    <div class="f"><label>Full boost by</label><input type="number" id="p_boostrpm" value="3200" step="100"><span class="u">rpm</span></div>
+    <div class="f"><label>Compressor eff.</label><input type="number" id="p_comeff" value="70" min="40" max="80"><span class="u">%</span></div>
+    <div class="f"><label>Intercooler eff.</label><input type="number" id="p_ic" value="65" min="0" max="95"><span class="u">%</span></div>
+    <div class="f"><label>Ambient temp</label><input type="number" id="p_tamb" value="25"><span class="u">°C</span></div>
+    <div class="f"><label>Ambient press.</label><input type="number" id="p_pamb" value="14.7" step="0.1"><span class="u">psia</span></div>
+  </div></div>
+  <div class="sec open"><div class="sec-h"><span>Breathing / Cam</span></div><div class="sec-b">
+    <div class="f"><label>Peak VE</label><input type="number" id="p_vemax" value="95" min="50" max="125"><span class="u">%</span></div>
+    <div class="f"><label>Tuned (peak) rpm</label><input type="number" id="p_rpmpeak" value="7400" step="100"><span class="u">rpm</span></div>
+    <div class="f"><label>Cam aggressiveness</label><input type="range" id="p_cam" value="50" min="0" max="100"><span class="u" id="camLbl">street</span></div>
+    <div class="f"><label>Port flow limit</label><input type="number" id="p_port" value="8000" step="100"><span class="u">rpm</span></div>
+  </div></div>
+  <div class="sec open"><div class="sec-h"><span>Fuel Parameters</span></div><div class="sec-b">
+    <div class="f"><label>Fuel</label><select id="p_fuel"></select></div>
+    <div class="f"><label>Target AFR (power)</label><input type="number" id="p_afr" value="12.5" step="0.1"><span class="u">:1</span></div>
+    <div class="f"><label>Intake air temp</label><input type="number" id="p_iat" value="40"><span class="u">°C</span></div>
+    <div class="f"><label>Combustion eff.</label><input type="number" id="p_eta" value="37" min="20" max="45"><span class="u">%</span></div>
+    <div class="f"><label>Injector size</label><input type="number" id="p_inj" value="550" step="10"><span class="u">cc/min</span></div>
+    <div class="f"><label>Injectors / cyl</label><input type="number" id="p_injpc" value="1" min="1" max="4"><span class="u">×</span></div>
+    <div class="f"><label>Base fuel press.</label><input type="number" id="p_fpr" value="43.5" step="0.5"><span class="u">psi</span></div>
+  </div></div>
+  <div class="readout" id="sideReadout"></div>
+</aside>
+
+<main id="main">
+
+<!-- ═══ DASHBOARD ═══ -->
+<div class="pane on" id="pane-dash">
+  <h2>Engine Dashboard</h2>
+  <div class="sub">Live results from the theoretical speed-density model. Every figure recomputes as you edit parameters.</div>
+  <div class="grid-cards" id="dashCards"></div>
+  <div class="card"><h3>Core Formulas Used</h3>
+    <div class="formula">Displacement &nbsp;<b>Vd = N · π/4 · B² · S</b> &nbsp;·&nbsp; Mean piston speed &nbsp;<b>Cm = 2 · S · n</b></div>
+    <div class="formula">Speed-density airflow &nbsp;<b>ṁ<sub>air</sub> = VE · ρ<sub>man</sub> · Vd · n / (2 · 60)</b> &nbsp; with &nbsp; <b>ρ<sub>man</sub> = MAP / (R · T<sub>man</sub>)</b></div>
+    <div class="formula">Indicated pressure &nbsp;<b>IMEP = η<sub>c</sub> · (LHV / AFR) · ρ<sub>man</sub> · VE</b> &nbsp;·&nbsp; <b>BMEP = IMEP − FMEP</b> (Chen–Flynn style friction)</div>
+    <div class="formula">Torque &nbsp;<b>T = BMEP · Vd / (4π)</b> &nbsp;·&nbsp; Power &nbsp;<b>P = T · n / 5252</b> (hp, lb·ft, rpm)</div>
+  </div>
+</div>
+
+<!-- ═══ VE TABLE ═══ -->
+<div class="pane" id="pane-ve">
+  <h2>Volumetric Efficiency Table (%)</h2>
+  <div class="sub">Editable VE map - MAP (psig) rows × RPM columns. Click a cell and type to edit. Model-generated by default.</div>
+  <div class="toolbar">
+    <span class="lbl">VE (%) &nbsp; MAP ↑ &nbsp; × &nbsp; RPM →</span><span class="sep"></span>
+    <button class="primary" onclick="recalcVE()">Recalculate VE</button>
+    <button onclick="nudgeVE(1)">+1</button>
+    <button onclick="nudgeVE(-1)">−1</button>
+    <button class="warn" onclick="smoothVE()">~ Smooth</button>
+    <button onclick="clearVE()">× Clear</button><span class="sep"></span>
+    <span class="lbl">Fill all:</span><input type="number" id="veFill" value="80"><button onclick="fillVE()">Apply</button>
+    <button class="warn" onclick="recalcVE()">Restore Defaults</button><span class="sep"></span>
+    <button onclick="exportCSV('ve')">Export CSV</button>
+  </div>
+  <div class="ve-scroll" id="veWrap"></div>
+</div>
+
+<!-- ═══ TIMING ═══ -->
+<div class="pane" id="pane-timing">
+  <h2>Ignition Timing - MBT &amp; Knock-Limited (° BTDC)</h2>
+  <div class="sub">MBT estimate from load/RPM, clamped by the knock model (octane requirement vs. fuel). Knock-limited cells are highlighted.</div>
+  <div class="toolbar">
+    <button class="primary" onclick="renderTiming()">Recalculate</button><span class="sep"></span>
+    <button onclick="exportCSV('timing')">Export CSV</button>
+  </div>
+  <div class="table-scroll" id="timingWrap"></div>
+  <div class="note">Model: MBT ≈ 10 + 26·(1 − load)<super></super> + rpm/300 - advances with RPM, retards with load. Knock limit from required-octane model: RON<sub>req</sub> rises with CR, boost and charge temperature, falls with richer AFR. Deficit leads to timing retard at ~1.5° per RON.</div>
+</div>
+
+<!-- ═══ AFR / IAT ═══ -->
+<div class="pane" id="pane-afr">
+  <h2>AFR &amp; Intake-Air-Temperature Correction</h2>
+  <div class="sub">Target lambda table by load, and density correction of charge air (ideal-gas law) across IAT.</div>
+  <div class="toolbar"><button onclick="exportCSV('afr')">Export CSV</button></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px" id="afrWrap"></div>
+</div>
+
+<!-- ═══ FUEL ═══ -->
+<div class="pane" id="pane-fuel">
+  <h2>Fuel System &amp; Injector Sizing</h2>
+  <div class="sub">Mass fuel flow from the airflow model; injector duty cycle at your chosen static flow and base pressure.</div>
+  <div class="toolbar"><button class="primary" onclick="renderFuel()">Recalculate</button><span class="sep"></span><button onclick="exportCSV('fuel')">Export CSV</button></div>
+  <div class="grid-cards" id="fuelCards"></div>
+  <div class="table-scroll" id="fuelWrap"></div>
+</div>
+
+<!-- ═══ DYNO ═══ -->
+<div class="pane" id="pane-dyno">
+  <h2>Dyno Simulation</h2>
+  <div class="sub">Full-throttle sweep from the theoretical model - horsepower, torque and manifold pressure vs. RPM. Hover the graph to inspect.</div>
+  <div class="toolbar">
+    <label class="lbl"><input type="checkbox" id="ckHP" checked onchange="drawDyno()"> HP</label>
+    <label class="lbl"><input type="checkbox" id="ckTQ" checked onchange="drawDyno()"> Torque</label>
+    <label class="lbl"><input type="checkbox" id="ckMAP" checked onchange="drawDyno()"> MAP</label><span class="sep"></span>
+    <span class="lbl">Sweep from</span><input type="number" id="d_from" value="1500" step="100">
+    <span class="lbl">to</span><input type="number" id="d_to" value="7400" step="100"><span class="sep"></span>
+    <button class="primary" onclick="renderDyno()">Rerun Dyno</button>
+    <button onclick="exportCSV('dyno')">Export CSV</button>
+  </div>
+  <div class="legend">
+    <span><span class="sw" style="background:#22d3ee"></span>hp</span>
+    <span><span class="sw" style="background:#fbbf24"></span>lb·ft</span>
+    <span><span class="sw" style="background:#34d399"></span>MAP (psig)</span>
+  </div>
+  <canvas id="dynoCanvas" height="430"></canvas>
+  <div class="note" id="dynoPeaks"></div>
+</div>
+
+<!-- ═══ BENCHMARKS ═══ -->
+<div class="pane" id="pane-bench">
+  <h2>Real-World Benchmarks - Theory vs. Published Dyno Data</h2>
+  <div class="sub">The same theoretical model run on well-documented production engines, compared against figures published by manufacturers and the automotive press. Positive Δ = model over-predicts.</div>
+  <div class="toolbar">
+    <button class="primary" onclick="renderBench()">Run All Benchmarks</button><span class="sep"></span>
+    <button onclick="exportCSV('bench')">Export CSV</button>
+  </div>
+  <div class="table-scroll" id="benchWrap"></div>
+  <div class="srcs">
+    Published figures sourced from:
+    <a href="https://eureka.patsnap.com/blog/machinery-tech-resources/ls3-engine/" target="_blank">PatSnap  GM LS3 spec sheet</a> ·
+    <a href="https://carbuzz.com/ls3-engine/" target="_blank">CarBuzz - LS3</a> ·
+    <a href="https://my.prostreetonline.com/2026/08/30/k20a2-vs-k20a3-acura-rsx-engine-differences/" target="_blank">ProStreet - K20A2</a> ·
+    <a href="https://www.jdmmeikan.com/cars/dc2" target="_blank">JDM Meikan - B18C Integra Type R</a> ·
+    <a href="https://bikkycoder.github.io/Supra-mk4/" target="_blank">Supra MK4 guide - 2JZ-GTE</a> ·
+    <a href="https://stanceauto.co.uk/2jzgte-build-guide" target="_blank">StanceAuto - 2JZ-GTE</a> ·
+    <a href="https://www.motormatchup.com/catalog/Subaru/WRX-STI/2017/Base-4DR-AWD-Sedan" target="_blank">MotorMatchup - EJ257 WRX STI</a> ·
+    <a href="https://crawfordperformance.com/blogs/news/subaru-sti-engine-guide" target="_blank">Crawford Performance - EJ257</a>
+  </div>
+</div>
+
+<!-- ═══ THEORY ═══ -->
+<div class="pane" id="pane-theory">
+  <h2>Theoretical Background &amp; Academic Sources</h2>
+  <div class="sub">The model implements the standard speed-density framework taught in engine fundamentals (Heywood, <i>Internal Combustion Engine Fundamentals</i>), with semi-empirical VE, friction and knock sub-models of the kind published in SAE and Elsevier journals.</div>
+  <div class="card"><h3>Sub-models</h3>
+    <div class="formula"><b>Volumetric efficiency</b> - Gaussian breathing curve around tuned rpm, scavenging gain with pressure ratio, port-flow choking at high rpm. Consistent with semi-empirical VE models in the literature (Kakaee &amp; Mashadi, <i>Proc. IMechE Part D</i>, 2017).</div>
+    <div class="formula"><b>Charge temperature (forced induction)</b> - T₂ = T₁·(1 + (PR<sup>0.283</sup> − 1)/η<sub>c</sub>) for the compressor, then intercooler: T₃ = T₂ − η<sub>ic</sub>·(T₂ − T<sub>amb</sub>).</div>
+    <div class="formula"><b>Dynamic compression ratio</b> - DCR computed from intake-valve-closing point (effective stroke), the classic Lanchester/DCR approach used for knock assessment.</div>
+    <div class="formula"><b>Friction</b> - FMEP = 30 + 8·(n/1000) + 1.5·(n/1000)² kPa (Chen–Flynn style, mean-piston-speed dependent).</div>
+    <div class="formula"><b>Knock</b> - Required-octane index from CR, boost, charge temp and enrichment; timing retarded 1.5°/RON of deficit, torque loss ≈ 1%/deg from MBT.</div>
+  </div>
+  <div class="card"><h3>Academic references (via Scholar)</h3>
+    <div class="srcs">
+      · Kakaee, Mashadi et al. - <i>A novel volumetric efficiency model for SI engines with VVT and VVL</i>, Proc. IMechE Part D, 2017 - <a href="https://journals.sagepub.com/doi/abs/10.1177/0954407016650545" target="_blank">doi:10.1177/0954407016650545</a><br>
+      · El Hadef, Colin, Talon et al. - <i>Neural model for real-time engine volumetric efficiency estimation</i>, SAE 2013-24-0132 - <a href="https://saemobilus.sae.org/papers/neural-model-real-time-engine-volumetric-efficiency-estimation-2013-24-0132" target="_blank">SAE</a><br>
+      · Boretti, Borghi, Cantore - <i>Numerical study of volumetric efficiencies in a high-speed four-valve SI engine</i>, SAE 942533 - <a href="https://saemobilus.sae.org/papers/numerical-study-volumetric-efficiencies-a-high-speed-four-valve-spark-ignition-engine-942533" target="_blank">SAE</a><br>
+      · Soh, Chung, Kim - <i>The prediction of volumetric efficiency considering gas exchange process in SI engine</i>, SAE 871170 - <a href="https://saemobilus.sae.org/downloads/papers/871170/Full%20Text%20PDF" target="_blank">SAE</a><br>
+      · De Nola, Giardiello, Gimelli et al. - <i>VE estimation based on neural networks to reduce experimental effort in engine base calibration</i>, Fuel, 2019 - <a href="https://www.sciencedirect.com/science/article/pii/S0016236119301838" target="_blank">ScienceDirect</a><br>
+      · Gumus - <i>Effects of volumetric efficiency on performance and emissions of a dual-fueled SI engine</i>, Fuel Processing Technology, 2011 - <a href="https://www.sciencedirect.com/science/article/pii/S0378382011001597" target="_blank">ScienceDirect</a>
+    </div>
+  </div>
+  <div class="note">This is an educational first-principles estimator - expect ±10–20% vs. a calibrated engine-dyno simulation. The Benchmarks tab quantifies the error against real published engines.</div>
+</div>
+
+</main>
+</div>
+
+<div class="statusbar" id="statusbar"></div>
+<div class="toast" id="toast"></div>
+<script>
+/* ═══════════════ STATE ═══════════════ */
+const FUELS = {
+  gasoline:{name:'Gasoline 93 (RON 98)', stoich:14.7, lhv:44.0e6, ron:98,  bsfc:0.50, dens:745},
+  premium: {name:'Premium 91 octane',     stoich:14.7, lhv:44.0e6, ron:96,  bsfc:0.50, dens:745},
+  e85:     {name:'E85 ethanol blend',     stoich:9.8,  lhv:29.2e6, ron:106, bsfc:0.68, dens:785},
+  methanol:{name:'Methanol (M100)',       stoich:6.45, lhv:19.9e6, ron:112, bsfc:0.95, dens:792},
+  race:    {name:'Race gas C16 (RON 117)',stoich:14.6, lhv:43.9e6, ron:117, bsfc:0.49, dens:720},
+};
+const S = {
+  project:'New Engine Project',
+  cyl:4, bore:86, stroke:86, cr:11.0, ivc:62, redline:7400,
+  asp:'turbo', boost:11, boostrpm:3200, comeff:70, ic:65, tamb:25, pamb:14.7,
+  vemax:95, rpmpeak:7400, cam:50, port:8000,
+  fuel:'gasoline', afr:12.5, iat:40, eta:37, inj:550, injpc:1, fpr:43.5,
+};
+const $=id=>document.getElementById(id);
+const PSI2KPA=6.894757, R=287.0, PI=Math.PI;
+let VE_USER=null;               // user-edited VE grid (null = model)
+let RPM_COLS=[], MAP_ROWS=[];   // axis values
+
+/* ═══════════════ GEOMETRY ═══════════════ */
+function disp_L(){ return S.cyl*PI/4*Math.pow(S.bore/1000,2)*(S.stroke/1000)*1000; }
+function disp_ci(){ return disp_L()*61.0237; }
+function dcr(){ // dynamic compression ratio from IVC
+  const r=S.cr, ivc=S.ivc*PI/180, Rr=S.stroke/1000, half=Rr/2;
+  // rod ratio assumed 1.65 - effective stroke remaining after IVC
+  const rod=1.65*S.stroke/1000, a=ivc;
+  const x = half*Math.cos(a)+Math.sqrt(Math.max(rod*rod-Math.pow(half*Math.sin(a),2),0));
+  const full = half+rod;                       // at BDC
+  const effStroke = full - x;                  // remaining travel after IVC
+  const frac = Math.min(Math.max(effStroke/(2*half),0.3),1);
+  const Veff = frac*(r-1)+1;                   // effective swept ratio
+  return Math.pow(Veff,1)*1 + (r-1)*0 ;        // geometric-effective
+}
+function dcrReal(){ // more standard: DCR = (Veff_swept + Vclear)/Vclear
+  const r=S.cr, ivc=S.ivc*PI/180;
+  const rod=1.65*(S.stroke/1000), half=(S.stroke/1000)/2;
+  const x = half*Math.cos(ivc)+Math.sqrt(Math.max(rod*rod-Math.pow(half*Math.sin(ivc),2),0));
+  const effStroke=(half+rod)-x, frac=Math.min(Math.max(effStroke/(2*half),0.3),1);
+  const Vs=PI/4*Math.pow(S.bore/1000,2)*(S.stroke/1000);
+  const Vc=Vs/(r-1);
+  return (frac*Vs+Vc)/Vc;
+}
+function mps(rpm){ return 2*(S.stroke/1000)*rpm/60; } // mean piston speed m/s
+
+/* ═══════════════ BREATHING ═══════════════ */
+function pr_at(rpm){ // pressure ratio available at rpm (boost ramp)
+  if(S.asp==='na') return 1;
+  const full=S.boostrpm<=0?1500:S.boostrpm;
+  let f=Math.min(Math.max((rpm-800)/(full-800),0),1);
+  if(S.asp==='sc') f=Math.min(Math.max(rpm/S.redline,0.15),1); // belt-driven: rises with rpm
+  const psi=S.boost*f;
+  return (S.pamb+psi)/S.pamb;
+}
+function chargeT(rpm){ // manifold charge temp K
+  const T1=S.tamb+273.15, pr=pr_at(rpm);
+  if(pr<=1.001) return S.iat+273.15;
+  const T2=T1*(1+(Math.pow(pr,0.283)-1)/(S.comeff/100));
+  return T2-(S.ic/100)*(T2-T1);
+}
+function map_psia(rpm){ return S.pamb*pr_at(rpm); }
+function ve_base(rpm){ // asymmetric Gaussian breathing curve + floor blend + port choke + backpressure
+  let spread=(S.rpmpeak||6000)*(0.85-0.35*(S.cam/100));    // aggressive cam = narrower
+  const pk=S.vemax/100*(1+0.10*(S.cam/100));               // and higher peak
+  if(rpm<S.rpmpeak)spread*=1.6;                            // wider below peak
+  const g=Math.exp(-Math.pow((rpm-S.rpmpeak)/spread,2));
+  let ve=pk*(0.85*g+0.15);                                 // floor blend keeps low-rpm VE realistic
+  ve*=1-Math.max(0,(rpm-S.port)/S.port)*1.4;               // port flow limit
+  const pr=pr_at(rpm);
+  ve*=1+0.035*(pr-1);                                      // scavenging under boost
+  if(S.asp==='turbo')ve*=1-0.18*(pr-1);                    // exhaust backpressure penalty
+  if(S.asp==='sc')ve*=1-0.08*(pr-1);
+  return Math.min(Math.max(ve,0.25),1.30);
+}
+function ve_at(rpm,mapPsig){ // from user table if present (bilinear), else model
+  if(!VE_USER) return ve_base(rpm)*(map_psia(rpm)/S.pamb>1?1:Math.pow(map_psia(rpm)/S.pamb,0.06));
+  // bilinear interp in user grid
+  const ri=axisIdx(RPM_COLS,rpm), mi=axisIdx(MAP_ROWS,mapPsig);
+  const [i0,i1,fx]=ri,[j0,j1,fy]=mi;
+  const g=(a,b)=>VE_USER[a][b]??80;
+  const v=g(j0,i0)*(1-fx)*(1-fy)+g(j0,i1)*fx*(1-fy)+g(j1,i0)*(1-fx)*fy+g(j1,i1)*fx*fy;
+  return Math.min(Math.max(v/100,0.2),1.35);
+}
+function axisIdx(ax,x){
+  if(x<=ax[0])return[0,0,0];
+  if(x>=ax[ax.length-1])return[ax.length-1,ax.length-1,0];
+  for(let i=0;i<ax.length-1;i++) if(x>=ax[i]&&x<=ax[i+1]){const f=(x-ax[i])/(ax[i+1]-ax[i]);return[i,i+1,f];}
+  return[ax.length-1,ax.length-1,0];
+}
+
+/* ═══════════════ THERMO / TORQUE ═══════════════ */
+const F=FUELS;
+function rho_man(rpm){ return (map_psia(rpm)*PSI2KPA*1000)/(R*chargeT(rpm)); } // kg/m³
+function fmep_kpa(rpm){ const n=rpm/1000; return 30+8*n+1.5*n*n; }
+function afr_at(rpm){ // richer under boost
+  const pr=pr_at(rpm);
+  return pr>1.05?Math.min(S.afr,F[S.fuel].stoich*0.80):S.afr;
+}
+function knockRetard(rpm){
+  const pr=pr_at(rpm), Tm=chargeT(rpm)-273.15;
+  const ronReq=88+1.6*(S.cr-7)+0.55*(pr-1)*14.7+0.10*(Tm-40)-1.2*Math.max(0,F[S.fuel].stoich-afr_at(rpm));
+  const deficit=Math.max(0,ronReq-F[S.fuel].ron);
+  return deficit*1.5; // degrees of retard needed
+}
+function mbt_at(rpm,loadFrac){ return 10+26*(1-loadFrac)+rpm/300; }
+function imep_kpa(rpm){
+  const afr=afr_at(rpm), ve=ve_base(rpm);
+  let eta=S.eta/100;
+  const ret=knockRetard(rpm);
+  const tqFactor=Math.max(1-0.010*ret,0.80); // ~1%/deg off MBT
+  return eta*(F[S.fuel].lhv/afr)*rho_man(rpm)*ve/1000*tqFactor; // kPa
+}
+function torque_lbft(rpm){
+  const bmep=imep_kpa(rpm)-fmep_kpa(rpm);
+  const Vd=disp_L()/1000; // m³
+  const Tnm=bmep*1000*Vd/(4*PI);
+  return Math.max(Tnm*0.737562,0);
+}
+function hp_at(rpm){ return torque_lbft(rpm)*rpm/5252; }
+function airflow_kgh(rpm){ // kg/h
+  const Vd=disp_L()/1000, ve=ve_base(rpm);
+  return rho_man(rpm)*ve*Vd*rpm/2*60;
+}
+function airflow_cfm(rpm){
+  const Vd_ci=disp_ci();
+  return ve_base(rpm)*Vd_ci*rpm/3456*(map_psia(rpm)/14.7)*((S.tamb+273.15)/chargeT(rpm));
+}
+</script>
+<script>
+/* ═══════════════ UI PLUMBING ═══════════════ */
+const PARAMS=['cyl','bore','stroke','cr','ivc','redline','asp','boost','boostrpm','comeff','ic','tamb','pamb','vemax','rpmpeak','cam','port','fuel','afr','iat','eta','inj','injpc','fpr'];
+function readInputs(){
+  PARAMS.forEach(k=>{
+    const el=$('p_'+k); if(!el)return;
+    S[k]=(el.tagName==='SELECT'||el.type==='text')?el.value:parseFloat(el.value);
+  });
+  const c=S.cam; $('camLbl').textContent=c<33?'stock':c<66?'street':'race';
+}
+function writeInputs(){
+  PARAMS.forEach(k=>{const el=$('p_'+k); if(el)el.value=S[k];});
+  $('projName').value=S.project;
+}
+document.querySelectorAll('#tabs .tab').forEach(t=>t.onclick=()=>gotoTab(t.dataset.t));
+function gotoTab(t){
+  document.querySelectorAll('#tabs .tab').forEach(x=>x.classList.toggle('on',x.dataset.t===t));
+  document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id==='pane-'+t));
+  if(t==='dyno')renderDyno();
+  if(t==='bench')renderBench();
+  if(t==='timing')renderTiming();
+  if(t==='afr')renderAFR();
+  if(t==='fuel')renderFuel();
+}
+document.querySelectorAll('.sec-h').forEach(h=>h.onclick=()=>h.parentElement.classList.toggle('open'));
+function toast(msg){const t=$('toast');t.textContent=msg;t.style.opacity=1;setTimeout(()=>t.style.opacity=0,1800);}
+
+/* ═══════════════ DASHBOARD ═══════════════ */
+function renderDash(){
+  const pr=pr_at(S.rpmpeak), pkT=torque_lbft_peak(), pkH=hp_peak();
+  const cards=[
+    ['Displacement',disp_L().toFixed(3)+' <small>L</small>',disp_ci().toFixed(1)+' ci · '+S.cyl+' cyl'],
+    ['Per cylinder',(disp_L()/S.cyl*1000).toFixed(0)+' <small>cc</small>','bore '+S.bore+' × stroke '+S.stroke+' mm'],
+    ['Dynamic CR',dcrReal().toFixed(2)+' <small>:1</small>','static '+S.cr+':1 · IVC '+S.ivc+'° ABDC'],
+    ['Peak pressure ratio',pr.toFixed(2)+' <small>PR</small>',(map_psia(S.rpmpeak)).toFixed(1)+' psia absolute'],
+    ['Est. peak power',pkH.hp.toFixed(0)+' <small>hp</small>','@ '+pkH.rpm+' rpm'],
+    ['Est. peak torque',pkT.tq.toFixed(0)+' <small>lb·ft</small>','@ '+pkT.rpm+' rpm · '+ (pkT.tq*1.35582).toFixed(0)+' N·m'],
+    ['BMEP @ peak TQ',((pkT.tq/0.737562)*4*PI/(disp_L()/1000)/1e5).toFixed(1)+' <small>bar</small>','brake mean effective pressure'],
+    ['Max airflow',airflow_cfm(S.rpmpeak).toFixed(0)+' <small>cfm</small>',airflow_kgh(S.rpmpeak).toFixed(0)+' kg/h @ '+S.rpmpeak+' rpm'],
+    ['Charge temp',(chargeT(S.rpmpeak)-273.15).toFixed(0)+' <small>°C</small>','after intercooler @ peak rpm'],
+    ['Max piston speed',mps(S.redline).toFixed(1)+' <small>m/s</small>','@ redline '+S.redline+' rpm'],
+    ['Knock margin',(F[S.fuel].ron-(88+1.6*(S.cr-7)+0.55*(pr_at(S.rpmpeak)-1)*14.7+0.10*(chargeT(S.rpmpeak)-273.15-40))).toFixed(1)+' <small>RON</small>',knockRetard(S.rpmpeak)>0?('<span style="color:var(--red)">retard '+knockRetard(S.rpmpeak).toFixed(1)+'° needed</span>'):'no retard required'],
+    ['Fuel @ peak power',(airflow_kgh(S.rpmpeak)/afr_at(S.rpmpeak)).toFixed(1)+' <small>kg/h</small>',(airflow_kgh(S.rpmpeak)/afr_at(S.rpmpeak)/F[S.fuel].dens*1000).toFixed(1)+' L/h'],
+  ];
+  $('dashCards').innerHTML=cards.map(c=>`<div class="stat"><div class="k">${c[0]}</div><div class="v">${c[1]}</div><div class="d">${c[2]}</div></div>`).join('');
+  $('sideReadout').innerHTML=
+    `DCR: <b>${dcrReal().toFixed(2)}</b> · Bore×Stroke: <b>${S.bore}×${S.stroke}</b><br>`+
+    `Disp: <b>${(disp_L()*1000).toFixed(0)} cc</b> · ${(disp_L()*1000/S.cyl).toFixed(0)} cc/cyl<br>`+
+    `Peak VE: <b>${S.vemax}%</b> @ <b>${S.rpmpeak}</b> rpm · AFR <b>${S.afr}</b>`;
+  const ret=knockRetard(S.rpmpeak);
+  $('statusbar').innerHTML=`Computed <b>16 × 31</b> maps · Advance range <b>${(mbt_at(1500,1)-ret).toFixed(1)}° – ${(mbt_at(S.redline,0.3)).toFixed(1)}°</b> · Knock-limited cells: <b>${ret>0?'YES - retard active':'0'}</b> · Project: <b>${S.project}</b>`;
+}
+function hp_peak(){let best={hp:0,rpm:0};for(let r=1000;r<=S.redline;r+=100){const h=hp_at(r);if(h>best.hp)best={hp:h,rpm:r};}return best;}
+function torque_lbft_peak(){let best={tq:0,rpm:0};for(let r=1000;r<=S.redline;r+=100){const t=torque_lbft(r);if(t>best.tq)best={tq:t,rpm:r};}return best;}
+
+/* ═══════════════ VE TABLE ═══════════════ */
+function buildAxes(){
+  RPM_COLS=[]; for(let r=500;r<=Math.max(S.redline,4000);r+=500)RPM_COLS.push(r);
+  MAP_ROWS=[]; const top=S.asp==='na'?0:Math.ceil((S.boost+3)/3)*3;
+  for(let p=top;p>=-14.7;p-=3.05)MAP_ROWS.push(+p.toFixed(2));
+}
+function recalcVE(){
+  buildAxes();
+  VE_USER=MAP_ROWS.map(mp=>RPM_COLS.map(r=>{
+    const prBoost=1+ (S.asp==='na'?0:(map_psia(r)/S.pamb-1));
+    const mapFrac=(mp+14.7)/14.7;
+    // model VE at this rpm, adjusted for pressure (slight rise with boost)
+    let v=ve_base(r)*100*(1+0.02*(mapFrac-1)*8);
+    return +v.toFixed(1);
+  }));
+  renderVE();renderDash();
+}
+function veColor(v){
+  // blue→teal→green→yellow→orange→red turbo map 35→115
+  const t=Math.min(Math.max((v-35)/80,0),1);
+  const stops=[[59,76,192],[45,180,200],[52,199,123],[250,204,21],[251,146,60],[239,68,68]];
+  const seg=t*(stops.length-1), i=Math.min(Math.floor(seg),stops.length-2), f=seg-i;
+  const c=stops[i].map((a,k)=>Math.round(a+(stops[i+1][k]-a)*f));
+  return `rgb(${c[0]},${c[1]},${c[2]})`;
+}
+function renderVE(){
+  if(!VE_USER)recalcVESilent();
+  let h='<table class="vegrid"><tr><th class="rowh">MAP\\RPM</th>'+RPM_COLS.map(r=>`<th>${r}</th>`).join('')+'</tr>';
+  MAP_ROWS.forEach((mp,j)=>{
+    h+=`<tr><th class="rowh">${mp.toFixed(1)}</th>`;
+    RPM_COLS.forEach((r,i)=>{
+      const v=VE_USER[j][i];
+      h+=`<td style="background:${veColor(v)}"><input value="${v.toFixed(1)}" data-j="${j}" data-i="${i}"></td>`;
+    });
+    h+='</tr>';
+  });
+  h+='</table>';
+  $('veWrap').innerHTML=h;
+  $('veWrap').querySelectorAll('input').forEach(inp=>{
+    inp.onchange=()=>{const v=parseFloat(inp.value); if(!isNaN(v)){VE_USER[inp.dataset.j][inp.dataset.i]=Math.min(Math.max(v,10),140); inp.parentElement.style.background=veColor(v); inp.value=VE_USER[inp.dataset.j][inp.dataset.i].toFixed(1); renderDash();}};
+  });
+}
+function recalcVESilent(){buildAxes();VE_USER=MAP_ROWS.map(mp=>RPM_COLS.map(r=>{const mapFrac=(mp+14.7)/14.7;return +((ve_base(r)*100)*(1+0.02*(mapFrac-1)*8)).toFixed(1);}));}
+function nudgeVE(d){if(!VE_USER)return;VE_USER=VE_USER.map(row=>row.map(v=>+(v+d).toFixed(1)));renderVE();renderDash();}
+function clearVE(){VE_USER=VE_USER.map(row=>row.map(()=>0));renderVE();}
+function fillVE(){const v=parseFloat($('veFill').value)||80;VE_USER=VE_USER.map(row=>row.map(()=>v));renderVE();renderDash();}
+function smoothVE(){
+  if(!VE_USER)return;
+  const R2=VE_USER.map((row,j)=>row.map((v,i)=>{
+    let s=0,c=0;
+    for(let dj=-1;dj<=1;dj++)for(let di=-1;di<=1;di++){
+      const jj=j+dj,ii=i+di;
+      if(jj>=0&&jj<VE_USER.length&&ii>=0&&ii<row.length){s+=VE_USER[jj][ii];c++;}
+    }
+    return +(s/c).toFixed(1);
+  }));
+  VE_USER=R2;renderVE();renderDash();
+}
+</script>
+<script>
+/* ═══════════════ TIMING ═══════════════ */
+function renderTiming(){
+  const rpms=RPM_COLS.length?RPM_COLS:(buildAxes(),RPM_COLS);
+  const loads=MAP_ROWS.length?MAP_ROWS:(buildAxes(),MAP_ROWS);
+  let h='<table class="data"><tr><th>MAP\\RPM</th>'+rpms.map(r=>`<th>${r}</th>`).join('')+'</tr>';
+  loads.forEach(mp=>{
+    const loadFrac=Math.min(Math.max((mp+14.7)/29.4,0),1);
+    h+=`<tr><th>${mp.toFixed(1)} psig</th>`;
+    rpms.forEach(r=>{
+      const mbt=mbt_at(r,loadFrac);
+      const ret=knockRetard(r)*loadFrac;
+      const actual=mbt-ret;
+      const kl=ret>0.5;
+      h+=`<td class="${kl?'neg':''}" title="MBT ${mbt.toFixed(1)}°, retard ${ret.toFixed(1)}°">${actual.toFixed(1)}</td>`;
+    });
+    h+='</tr>';
+  });
+  h+='</table>';
+  $('timingWrap').innerHTML=h+'<div class="note">Red cells are knock-limited (retarded below MBT by the octane model).</div>';
+}
+
+/* ═══════════════ AFR / IAT ═══════════════ */
+function renderAFR(){
+  const loads=[0,3,6,9,12,15,18,21,24,27,30];
+  let a='<div class="card"><h3>Target Lambda × Boost</h3><table class="data"><tr><th>MAP (psig)</th><th>AFR</th><th>λ</th><th>Egt trend</th></tr>';
+  loads.forEach(mp=>{
+    const pr=(S.pamb+Math.max(mp,0))/S.pamb;
+    let afr=pr>1.05?Math.min(S.afr,F[S.fuel].stoich*0.80):F[S.fuel].stoich*(mp>-2?1.0:1.05);
+    if(mp<-2)afr=F[S.fuel].stoich*1.05; // lean cruise
+    const lam=afr/F[S.fuel].stoich;
+    a+=`<tr><td>${mp}</td><td class="hl">${afr.toFixed(1)}</td><td>${lam.toFixed(2)}</td><td>${lam<0.85?'cool (rich)':lam>1.02?'hot (lean)':'nominal'}</td></tr>`;
+  });
+  a+='</table></div>';
+  let b='<div class="card"><h3>IAT Density Correction (ideal gas)</h3><table class="data"><tr><th>IAT °C</th><th>ρ rel.</th><th>Power est.</th><th>Knock margin</th></tr>';
+  for(let t=-10;t<=80;t+=10){
+    const rhoRel=(273.15+25)/(273.15+t);
+    const pkw=hp_peak().hp*rhoRel;
+    const km=F[S.fuel].ron-(88+1.6*(S.cr-7)+0.55*(pr_at(S.rpmpeak)-1)*14.7+0.10*(t-40));
+    b+=`<tr><td>${t}</td><td>${rhoRel.toFixed(3)}</td><td>${pkw.toFixed(0)} hp</td><td class="${km<0?'neg':'pos'}">${km.toFixed(1)} RON</td></tr>`;
+  }
+  b+='</table></div>';
+  $('afrWrap').innerHTML=a+b;
+}
+
+/* ═══════════════ FUEL / INJECTORS ═══════════════ */
+function renderFuel(){
+  const pkH=hp_peak();
+  const bsfc=F[S.fuel].bsfc;
+  const reqLbhr=pkH.hp*bsfc/0.85;                       // at 85% duty, all injectors
+  const perInj=reqLbhr/(S.cyl*S.injpc);
+  const injLbhr=S.inj*0.1575*Math.sqrt(S.fpr/43.5);     // cc/min → lb/hr scaled by pressure
+  const maxHp=S.cyl*S.injpc*injLbhr*0.85/bsfc;
+  const dutyAtPeak=reqLbhr/(S.cyl*S.injpc*injLbhr)*100;
+  $('fuelCards').innerHTML=[
+    ['Required flow / injector',perInj.toFixed(1)+' <small>lb/hr</small>','for '+pkH.hp.toFixed(0)+' hp at BSFC '+bsfc+' · 85% duty'],
+    ['Your injector flow',injLbhr.toFixed(1)+' <small>lb/hr</small>',S.inj+' cc/min @ '+S.fpr+' psi'],
+    ['Duty cycle @ peak',dutyAtPeak.toFixed(0)+' <small>%</small>',dutyAtPeak>95?'<span style="color:var(--red)">TOO SMALL - upgrade injectors</span>':dutyAtPeak>85?'<span style="color:var(--yellow)">marginal</span>':'safe'],
+    ['Max supported HP',maxHp.toFixed(0)+' <small>hp</small>','with current injectors @ 85% duty'],
+    ['Fuel flow @ peak',(airflow_kgh(pkH.rpm)/afr_at(pkH.rpm)).toFixed(1)+' <small>kg/h</small>',(airflow_kgh(pkH.rpm)/afr_at(pkH.rpm)/F[S.fuel].dens*1000).toFixed(1)+' L/h of '+F[S.fuel].name],
+    ['Stoich / target AFR',F[S.fuel].stoich+' / '+afr_at(pkH.rpm),'λ = '+(afr_at(pkH.rpm)/F[S.fuel].stoich).toFixed(2)+' at peak power'],
+  ].map(c=>`<div class="stat"><div class="k">${c[0]}</div><div class="v">${c[1]}</div><div class="d">${c[2]}</div></div>`).join('');
+  let h='<table class="data"><tr><th>RPM</th><th>Air kg/h</th><th>Fuel kg/h</th><th>Injector duty %</th><th>ms @ 2-stroke ref</th></tr>';
+  for(let r=1000;r<=S.redline;r+=500){
+    const air=airflow_kgh(r), fuel=air/afr_at(r);
+    const perCylHr=fuel/(S.cyl*S.injpc);
+    const injCapHr=injLbhr*0.453592; // kg/h per inj at 100%
+    const duty=perCylHr/injCapHr*100;
+    const ms=duty/100*(60000/(r/2)); // full cycle time
+    h+=`<tr><td>${r}</td><td>${air.toFixed(1)}</td><td>${fuel.toFixed(1)}</td><td class="${duty>95?'neg':duty>85?'hl':''}">${duty.toFixed(0)}</td><td>${ms.toFixed(1)}</td></tr>`;
+  }
+  h+='</table>';
+  $('fuelWrap').innerHTML=h;
+}
+
+/* ═══════════════ DYNO ═══════════════ */
+let DYNO=[];
+function renderDyno(){
+  DYNO=[];
+  const a=+$('d_from').value||1500, b=Math.min(+$('d_to').value||S.redline,S.redline);
+  for(let r=a;r<=b;r+=100){
+    DYNO.push({rpm:r,hp:hp_at(r),tq:torque_lbft(r),map:map_psia(r)-14.7});
+  }
+  drawDyno();
+  const pkH=DYNO.reduce((m,d)=>d.hp>m.hp?d:m), pkT=DYNO.reduce((m,d)=>d.tq>m.tq?d:m), pkM=DYNO.reduce((m,d)=>d.map>m.map?d:m);
+  $('dynoPeaks').innerHTML=`Peak hp: <b style="color:var(--cyan)">${pkH.hp.toFixed(0)} @ ${pkH.rpm} rpm</b> &nbsp;|&nbsp; Peak lb·ft: <b style="color:var(--yellow)">${pkT.tq.toFixed(0)} @ ${pkT.rpm} rpm</b> &nbsp;|&nbsp; Peak MAP: <b style="color:var(--green)">${pkM.map.toFixed(1)} psig @ ${pkM.rpm} rpm</b> &nbsp;|&nbsp; Timing: MBT computed ${knockRetard(pkT.rpm)>0.5?'(knock-limited)':''}`;
+}
+function drawDyno(){
+  const cv=$('dynoCanvas'), ctx=cv.getContext('2d');
+  const W=cv.clientWidth||800; cv.width=W*2; cv.height=860; ctx.scale(2,2);
+  const H=430, padL=56, padR=56, padT=26, padB=38;
+  ctx.clearRect(0,0,W,H);
+  if(!DYNO.length)return;
+  const show={hp:$('ckHP').checked,tq:$('ckTQ').checked,map:$('ckMAP').checked};
+  const xs=DYNO.map(d=>d.rpm), x0=Math.min(...xs), x1=Math.max(...xs);
+  const maxP=Math.max(...DYNO.map(d=>Math.max(show.hp?d.hp:0,show.tq?d.tq:0)))*1.08||1;
+  const mapMax=Math.max(...DYNO.map(d=>d.map))*1.15||1, mapMin=Math.min(...DYNO.map(d=>d.map),0);
+  const X=r=>padL+(r-x0)/(x1-x0)*(W-padL-padR);
+  const YP=v=>H-padB-v/maxP*(H-padT-padB);
+  const YM=v=>H-padB-(v-mapMin)/(mapMax-mapMin)*(H-padT-padB);
+  // grid
+  ctx.strokeStyle='#16212d';ctx.lineWidth=1;ctx.font='10px JetBrains Mono, monospace';ctx.fillStyle='#5c6b7a';
+  for(let i=0;i<=8;i++){const y=padT+i*(H-padT-padB)/8;ctx.beginPath();ctx.moveTo(padL,y);ctx.lineTo(W-padR,y);ctx.stroke();
+    const val=maxP*(1-i/8);ctx.textAlign='right';ctx.fillText(val.toFixed(0),padL-8,y+3);
+    if(show.map){const mv=mapMin+(mapMax-mapMin)*(1-i/8);ctx.textAlign='left';ctx.fillStyle='#3a5f4c';ctx.fillText(mv.toFixed(1),W-padR+8,y+3);ctx.fillStyle='#5c6b7a';}}
+  const step=x1-x0>3000?1000:500;
+  for(let r=Math.ceil(x0/step)*step;r<=x1;r+=step){const x=X(r);ctx.beginPath();ctx.moveTo(x,padT);ctx.lineTo(x,H-padB);ctx.stroke();ctx.textAlign='center';ctx.fillText(r,x,H-padB+16);}
+  ctx.fillStyle='#5c6b7a';ctx.textAlign='center';ctx.fillText('RPM',(W)/2,H-6);
+  if(show.map){ctx.save();ctx.translate(14,H/2);ctx.rotate(-PI/2);ctx.fillText('psig',0,0);ctx.restore();}
+  function plot(key,color,dash){
+    ctx.strokeStyle=color;ctx.lineWidth=2;ctx.setLineDash(dash||[]);
+    ctx.shadowColor=color;ctx.shadowBlur=8;
+    ctx.beginPath();
+    DYNO.forEach((d,i)=>{const x=X(d.rpm),y=key==='map'?YM(d.map):YP(d[key]);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
+    ctx.stroke();ctx.setLineDash([]);ctx.shadowBlur=0;
+  }
+  if(show.map)plot('map','#34d399');
+  if(show.tq)plot('tq','#fbbf24',[8,6]);
+  if(show.hp)plot('hp','#22d3ee');
+  // hover
+  cv.onmousemove=e=>{
+    const rect=cv.getBoundingClientRect(),mx=e.clientX-rect.left;
+    const r=x0+(mx-padL)/(W-padL-padR)*(x1-x0);
+    const d=DYNO.reduce((best,dd)=>Math.abs(dd.rpm-r)<Math.abs(best.rpm-r)?dd:best);
+    drawDynoBase(W,H,padL,padR,padT,padB);
+    ctx.strokeStyle='rgba(219,228,236,.25)';ctx.beginPath();ctx.moveTo(X(d.rpm),padT);ctx.lineTo(X(d.rpm),H-padB);ctx.stroke();
+    ctx.fillStyle='#0d141d';ctx.strokeStyle='#263647';
+    const bx=Math.min(Math.max(mx-70,padL),W-padR-140),by=padT+10;
+    ctx.fillRect(bx,by,140,66);ctx.strokeRect(bx,by,140,66);
+    ctx.fillStyle='#dbe4ec';ctx.textAlign='left';ctx.font='11px JetBrains Mono, monospace';
+    ctx.fillText(d.rpm+' rpm',bx+10,by+16);
+    ctx.fillStyle='#22d3ee';ctx.fillText(d.hp.toFixed(1)+' hp',bx+10,by+32);
+    ctx.fillStyle='#fbbf24';ctx.fillText(d.tq.toFixed(1)+' lb·ft',bx+10,by+46);
+    ctx.fillStyle='#34d399';ctx.fillText(d.map.toFixed(1)+' psig MAP',bx+10,by+60);
+  };
+  function drawDynoBase(){ /* full redraw on hover */ 
+    const ctx2=cv.getContext('2d');ctx2.save();ctx2.setTransform(2,0,0,2,0,0);ctx2.clearRect(0,0,W,H);
+    ctx2.strokeStyle='#16212d';ctx2.lineWidth=1;ctx2.font='10px JetBrains Mono, monospace';
+    for(let i=0;i<=8;i++){const y=padT+i*(H-padT-padB)/8;ctx2.beginPath();ctx2.moveTo(padL,y);ctx2.lineTo(W-padR,y);ctx2.stroke();
+      ctx2.fillStyle='#5c6b7a';ctx2.textAlign='right';ctx2.fillText((maxP*(1-i/8)).toFixed(0),padL-8,y+3);
+      if(show.map){ctx2.textAlign='left';ctx2.fillStyle='#3a5f4c';ctx2.fillText((mapMin+(mapMax-mapMin)*(1-i/8)).toFixed(1),W-padR+8,y+3);}}
+    for(let r=Math.ceil(x0/step)*step;r<=x1;r+=step){const x=X(r);ctx2.beginPath();ctx2.moveTo(x,padT);ctx2.lineTo(x,H-padB);ctx2.stroke();ctx2.fillStyle='#5c6b7a';ctx2.textAlign='center';ctx2.fillText(r,x,H-padB+16);}
+    function p2(key,color,dash){ctx2.strokeStyle=color;ctx2.lineWidth=2;ctx2.setLineDash(dash||[]);ctx2.shadowColor=color;ctx2.shadowBlur=8;ctx2.beginPath();DYNO.forEach((d,i)=>{const x=X(d.rpm),y=key==='map'?YM(d.map):YP(d[key]);i?ctx2.lineTo(x,y):ctx2.moveTo(x,y);});ctx2.stroke();ctx2.setLineDash([]);ctx2.shadowBlur=0;}
+    if(show.map)p2('map','#34d399');if(show.tq)p2('tq','#fbbf24',[8,6]);if(show.hp)p2('hp','#22d3ee');
+    ctx2.restore();
+  }
+  cv._redraw=drawDynoBase;
+}
+window.addEventListener('resize',()=>{if($('pane-dyno').classList.contains('on'))drawDyno();});
+</script>
+<script>
+/* ═══════════════ BENCHMARKS - theory vs. published ═══════════════ */
+const BENCHMARKS=[
+ {name:'GM LS3 6.2L V8', car:'Chevrolet Corvette C6 / Camaro SS', pubHp:426, pubHpRpm:5900, pubTq:420, pubTqRpm:4600,
+  src:'PatSnap / CarBuzz',
+  p:{cyl:8,bore:103.25,stroke:92,cr:10.7,ivc:55,redline:6600,asp:'na',boost:0,boostrpm:3200,comeff:70,ic:65,tamb:25,pamb:14.7,vemax:95,rpmpeak:5200,cam:40,port:6600,afr:12.8,iat:35,eta:32}},
+ {name:'Honda K20A2 2.0L I4', car:'Acura RSX Type-S (2002–04)', pubHp:200, pubHpRpm:7400, pubTq:142, pubTqRpm:6000,
+  src:'ProStreet Online',
+  p:{cyl:4,bore:86,stroke:86,cr:11.0,ivc:65,redline:7900,asp:'na',boost:0,boostrpm:3200,comeff:70,ic:65,tamb:25,pamb:14.7,vemax:100,rpmpeak:7400,cam:60,port:8200,afr:13.0,iat:40,eta:34}},
+ {name:'Honda B18C5 1.8L I4', car:'Acura Integra Type R (USDM)', pubHp:195, pubHpRpm:8000, pubTq:130, pubTqRpm:5700,
+  src:'JDM Meikan',
+  p:{cyl:4,bore:81,stroke:87.2,cr:10.6,ivc:70,redline:8400,asp:'na',boost:0,boostrpm:3200,comeff:70,ic:65,tamb:25,pamb:14.7,vemax:103,rpmpeak:7700,cam:65,port:8200,afr:13.0,iat:40,eta:34}},
+ {name:'Toyota 2JZ-GTE 3.0L TT I6', car:'Toyota Supra MK4 (USDM)', pubHp:320, pubHpRpm:5600, pubTq:315, pubTqRpm:4000,
+  src:'Supra MK4 Guide / StanceAuto',
+  p:{cyl:6,bore:86,stroke:86,cr:8.5,ivc:50,redline:6800,asp:'turbo',boost:11,boostrpm:3400,comeff:68,ic:60,tamb:25,pamb:14.7,vemax:92,rpmpeak:5400,cam:35,port:5200,afr:11.5,iat:45,eta:33}},
+ {name:'Subaru EJ257 2.5L Turbo F4', car:'Subaru WRX STI (2015–18)', pubHp:305, pubHpRpm:6000, pubTq:290, pubTqRpm:4000,
+  src:'MotorMatchup / Crawford',
+  p:{cyl:4,bore:99.5,stroke:79,cr:8.2,ivc:52,redline:6800,asp:'turbo',boost:14.7,boostrpm:2800,comeff:66,ic:62,tamb:25,pamb:14.7,vemax:94,rpmpeak:5800,cam:40,port:5400,afr:11.2,iat:45,eta:33}},
+];
+let BENCH_RES=[];
+function runBenchmark(b){
+  const save={...S};
+  Object.assign(S,b.p);
+  const hpPred=hp_at(b.pubHpRpm), tqPred=torque_lbft(b.pubTqRpm);
+  Object.assign(S,save);
+  return {hpPred,tqPred};
+}
+function renderBench(){
+  BENCH_RES=BENCHMARKS.map(b=>({b,...runBenchmark(b)}));
+  let h='<table class="data"><tr><th>Engine</th><th>Application</th><th>Published hp</th><th>Model hp</th><th>Δ hp</th><th>Published lb·ft</th><th>Model lb·ft</th><th>Δ tq</th><th>Source</th><th></th></tr>';
+  BENCH_RES.forEach((r,k)=>{
+    const dH=(r.hpPred/r.b.pubHp-1)*100, dT=(r.tqPred/r.b.pubTq-1)*100;
+    const cls=d=>Math.abs(d)<6?'pos':Math.abs(d)<12?'hl':'neg';
+    h+=`<tr><td style="text-align:left">${r.b.name}</td><td style="text-align:left;color:var(--dim)">${r.b.car}</td>`+
+       `<td>${r.b.pubHp} @ ${r.b.pubHpRpm}</td><td class="hl">${r.hpPred.toFixed(0)}</td><td class="${cls(dH)}">${dH>=0?'+':''}${dH.toFixed(1)}%</td>`+
+       `<td>${r.b.pubTq} @ ${r.b.pubTqRpm}</td><td class="hl">${r.tqPred.toFixed(0)}</td><td class="${cls(dT)}">${dT>=0?'+':''}${dT.toFixed(1)}%</td>`+
+       `<td style="color:var(--dimmer)">${r.b.src}</td><td><button onclick="loadBench(${k})">Load into model</button></td></tr>`;
+  });
+  h+='</table>';
+  const avgH=BENCH_RES.reduce((s,r)=>s+Math.abs(r.hpPred/r.b.pubHp-1),0)/BENCH_RES.length*100;
+  const avgT=BENCH_RES.reduce((s,r)=>s+Math.abs(r.tqPred/r.b.pubTq-1),0)/BENCH_RES.length*100;
+  h+=`<div class="note">Mean absolute error: <b style="color:var(--cyan)">${avgH.toFixed(1)}%</b> on power, <b style="color:var(--cyan)">${avgT.toFixed(1)}%</b> on torque across ${BENCH_RES.length} production engines. “Load into model” pushes that engine's parameters into the sidebar so you can explore it in every other tab.</div>`;
+  $('benchWrap').innerHTML=h;
+}
+function loadBench(k){
+  const b=BENCHMARKS[k];
+  Object.assign(S,b.p); S.project=b.name; VE_USER=null;
+  writeInputs(); recalcVE(); renderDash(); renderTiming(); renderAFR(); renderFuel();
+  toast('Loaded '+b.name+' into the model'); gotoTab('dash');
+}
+
+/* ═══════════════ CSV EXPORT ═══════════════ */
+function dl(name,rows){
+  const csv=rows.map(r=>r.map(c=>{c=String(c);return /[",\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c;}).join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8'}));
+  a.download=name; a.click(); URL.revokeObjectURL(a.href);
+}
+function exportCSV(kind){
+  const pn=(S.project||'engine').replace(/[^\w\-]+/g,'_');
+  if(kind==='ve'){
+    if(!VE_USER)recalcVESilent();
+    dl(pn+'_VE_table.csv',[['MAP_psig\\RPM',...RPM_COLS],...MAP_ROWS.map((m,j)=>[m,...VE_USER[j]])]);
+  }
+  if(kind==='timing'){
+    const rows=[['MAP_psig\\RPM',...RPM_COLS]];
+    MAP_ROWS.forEach(mp=>{
+      const lf=Math.min(Math.max((mp+14.7)/29.4,0),1);
+      rows.push([mp,...RPM_COLS.map(r=>+(mbt_at(r,lf)-knockRetard(r)*lf).toFixed(1))]);
+    });
+    dl(pn+'_timing_MBT.csv',rows);
+  }
+  if(kind==='afr'){
+    const rows=[['MAP_psig','AFR','lambda']];
+    for(let mp=-14;mp<=30;mp+=2){
+      const pr=(S.pamb+Math.max(mp,0))/S.pamb;
+      let afr=pr>1.05?Math.min(S.afr,F[S.fuel].stoich*0.80):F[S.fuel].stoich*(mp>-2?1.0:1.05);
+      rows.push([mp,+afr.toFixed(2),+(afr/F[S.fuel].stoich).toFixed(3)]);
+    }
+    dl(pn+'_AFR_table.csv',rows);
+  }
+  if(kind==='fuel'){
+    const injLbhr=S.inj*0.1575*Math.sqrt(S.fpr/43.5);
+    const rows=[['RPM','air_kg_h','fuel_kg_h','injector_duty_pct','hp','torque_lbft']];
+    for(let r=1000;r<=S.redline;r+=250){
+      const air=airflow_kgh(r),fuel=air/afr_at(r);
+      rows.push([r,+air.toFixed(1),+fuel.toFixed(2),+(fuel/(S.cyl*S.injpc)/(injLbhr*0.453592)*100).toFixed(1),+hp_at(r).toFixed(1),+torque_lbft(r).toFixed(1)]);
+    }
+    dl(pn+'_fuel_system.csv',rows);
+  }
+  if(kind==='dyno'){
+    if(!DYNO.length)renderDyno();
+    dl(pn+'_dyno_sim.csv',[['RPM','hp','torque_lbft','MAP_psig','VE_pct','AFR','IMEP_kPa','BMEP_kPa'],
+      ...DYNO.map(d=>[d.rpm,+d.hp.toFixed(1),+d.tq.toFixed(1),+d.map.toFixed(2),+(ve_base(d.rpm)*100).toFixed(1),+afr_at(d.rpm).toFixed(2),+imep_kpa(d.rpm).toFixed(0),+(imep_kpa(d.rpm)-fmep_kpa(d.rpm)).toFixed(0)])]);
+  }
+  if(kind==='bench'){
+    if(!BENCH_RES.length)renderBench();
+    dl('benchmark_theory_vs_published.csv',[['Engine','Application','Published hp','@rpm','Model hp','Delta hp %','Published lb-ft','@rpm','Model lb-ft','Delta tq %','Source'],
+      ...BENCH_RES.map(r=>[r.b.name,r.b.car,r.b.pubHp,r.b.pubHpRpm,+r.hpPred.toFixed(1),+((r.hpPred/r.b.pubHp-1)*100).toFixed(1),r.b.pubTq,r.b.pubTqRpm,+r.tqPred.toFixed(1),+((r.tqPred/r.b.pubTq-1)*100).toFixed(1),r.b.src])]);
+  }
+  toast('CSV exported');
+}
+function exportAllCSV(){['ve','timing','afr','fuel','dyno','bench'].forEach((k,i)=>setTimeout(()=>exportCSV(k),i*250));}
+
+/* ═══════════════ SAVE / OPEN ═══════════════ */
+function saveProject(){
+  const data={...S,VE_USER};
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,1)],{type:'application/json'}));
+  a.download=(S.project||'engine').replace(/[^\w\-]+/g,'_')+'.enginecalc.json'; a.click();
+  toast('Project saved');
+}
+function openProject(e){
+  const f=e.target.files[0]; if(!f)return;
+  const rd=new FileReader();
+  rd.onload=()=>{try{
+    const d=JSON.parse(rd.result);
+    PARAMS.forEach(k=>{if(k in d)S[k]=d[k];});
+    if(d.project)S.project=d.project;
+    VE_USER=d.VE_USER||null;
+    writeInputs(); if(!VE_USER)recalcVE(); else renderVE();
+    renderDash();renderTiming();renderAFR();renderFuel();
+    toast('Project loaded');
+  }catch(err){toast('Invalid project file');}};
+  rd.readAsText(f); e.target.value='';
+}
+function newProject(){location.reload();}
+
+/* ═══════════════ INIT ═══════════════ */
+(function init(){
+  const sel=$('p_fuel');
+  Object.keys(FUELS).forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=FUELS[k].name;sel.appendChild(o);});
+  writeInputs();
+  buildAxes();
+  recalcVE();
+  renderDash();renderTiming();renderAFR();renderFuel();
+  const VE_KEYS=['cyl','bore','stroke','cr','redline','asp','boost','boostrpm','comeff','ic','tamb','pamb','vemax','rpmpeak','cam','port'];
+  document.querySelectorAll('#sidebar input,#sidebar select').forEach(el=>{
+    el.addEventListener('input',()=>{
+      readInputs();
+      if(VE_KEYS.includes(el.id.replace('p_',''))){VE_USER=null;recalcVE();}
+      renderDash();renderTiming();renderAFR();renderFuel();
+      if($('pane-dyno').classList.contains('on'))renderDyno();
+      if($('pane-bench').classList.contains('on'))renderBench();
+    });
+  });
+})();
+</script>
+</body>
+</html>

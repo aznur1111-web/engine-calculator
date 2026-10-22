@@ -3,404 +3,496 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ENGINE CALCULATOR - Theoretical Engine Model + Real-World Benchmarks. Curated by Sadman Aznur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<meta name="color-scheme" content="light dark">
+<title>ENGINE CALCULATOR — Theoretical Engine Model + Real-World Benchmarks. Curated by Sadman Aznur</title>
 <style>
+/* ============================================================
+   Design system — Aznur Index
+   ============================================================ */
 :root{
-  --bg:#07090c; --bg2:#0b0f14; --panel:rgba(18,24,32,.86); --panel2:rgba(24,31,41,.72);
-  --border:#1c2735; --border2:#263647; --text:#dbe4ec; --dim:#8a99a8; --dimmer:#5c6b7a;
-  --cyan:#22d3ee; --cyan2:#00aaff; --green:#34d399; --yellow:#fbbf24; --orange:#fb923c; --red:#f87171;
-  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  --sans:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  color-scheme: light dark;
+  --bg:#fdfcfc; --surface:#faf8f7; --active:#f4f0ef;
+  --fg:#201d1d; --dim:#646262; --faint:#9a9898;
+  --line:#dcd9d9; --accent:#b45309; --accent-fg:#fdfcfc;
+  --font:"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --radius:4px;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%}
-body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13px;overflow:hidden}
-::-webkit-scrollbar{width:8px;height:8px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:#233246;border-radius:4px}
-::-webkit-scrollbar-thumb:hover{background:#2f4359}
-
-/* ── header ─────────────────────────── */
-header{height:88px;display:flex;flex-direction:column;border-bottom:1px solid var(--border);background:linear-gradient(180deg,#0a0e13,#080b0f);flex:0 0 auto}
-.hd-top{display:flex;align-items:center;gap:10px;padding:10px 16px 6px}
-.logo{font-family:var(--mono);font-weight:700;font-size:14px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;text-shadow:0 0 18px rgba(34,211,238,.35);white-space:nowrap}
-.logo small{color:var(--dim);font-weight:400;letter-spacing:1px;margin-left:10px;font-size:11px}
-.hd-btns{display:flex;gap:6px;margin-left:18px}
-button{font-family:var(--mono);font-size:11.5px;background:rgba(30,41,56,.55);color:var(--cyan);border:1px solid var(--border2);padding:5px 12px;border-radius:4px;cursor:pointer;transition:all .18s;letter-spacing:.4px;white-space:nowrap}
-button:hover{border-color:var(--cyan);background:rgba(34,211,238,.09);box-shadow:0 0 12px rgba(34,211,238,.15)}
-button.primary{background:rgba(34,211,238,.12);border-color:rgba(34,211,238,.5)}
-button.warn{color:var(--orange)}
-button.warn:hover{border-color:var(--orange);background:rgba(251,146,60,.08)}
-.proj{margin-left:auto;display:flex;align-items:center;gap:8px;color:var(--dim);font-family:var(--mono);font-size:11px}
-.proj input{background:#0e141c;border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:11px;padding:4px 8px;border-radius:3px;width:190px}
-.tabs{display:flex;gap:2px;padding:0 16px;overflow-x:auto}
-.tab{font-family:var(--mono);font-size:11px;letter-spacing:1px;padding:7px 14px;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;user-select:none;transition:color .15s}
-.tab:hover{color:var(--text)}
-.tab.on{color:var(--cyan);border-bottom-color:var(--cyan)}
-
-/* ── layout ─────────────────────────── */
-#wrap{display:flex;height:calc(100vh - 88px)}
-aside{width:264px;flex:0 0 264px;border-right:1px solid var(--border);background:var(--bg2);overflow-y:auto;padding:10px 0 40px}
-main{flex:1;overflow:auto;padding:14px 18px 60px;background:radial-gradient(1200px 500px at 70% -10%,rgba(0,170,255,.05),transparent 60%),var(--bg)}
-
-.sec{border-bottom:1px solid #131c26;margin-bottom:4px}
-.sec-h{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;cursor:pointer;user-select:none}
-.sec-h span{font-family:var(--mono);font-size:10.5px;letter-spacing:1.6px;color:var(--cyan);text-transform:uppercase}
-.sec-h::after{content:'▸';color:var(--dimmer);font-size:10px;transition:transform .2s}
-.sec.open .sec-h::after{transform:rotate(90deg)}
-.sec-b{display:none;padding:2px 14px 12px}
-.sec.open .sec-b{display:block}
-.f{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:7px 0}
-.f label{color:var(--dim);font-size:11.5px;flex:1}
-.f input,.f select{width:104px;background:#0d131b;border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:11.5px;padding:4px 7px;border-radius:3px;text-align:right}
-.f select{text-align:left}
-.f input:focus,.f select:focus{outline:none;border-color:var(--cyan)}
-.f .u{color:var(--dimmer);font-size:10px;width:38px;font-family:var(--mono)}
-input[type=range]{-webkit-appearance:none;width:104px;height:3px;background:#233246;border-radius:2px}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--cyan);cursor:pointer;box-shadow:0 0 8px rgba(34,211,238,.5)}
-.readout{margin:10px 14px;padding:9px 11px;background:rgba(34,211,238,.05);border:1px solid rgba(34,211,238,.18);border-radius:4px;font-family:var(--mono);font-size:10.5px;color:var(--dim);line-height:1.8}
-.readout b{color:var(--cyan);font-weight:500}
-
-/* ── panes ─────────────────────────── */
-.pane{display:none}
-.pane.on{display:block;animation:fade .25s}
-@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
-.pane h2{font-family:var(--mono);font-size:13px;letter-spacing:1.5px;color:var(--text);text-transform:uppercase;margin:4px 0 4px}
-.pane .sub{color:var(--dim);font-size:11.5px;margin-bottom:14px}
-.toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:10px 0 14px;padding:10px 12px;background:var(--panel);border:1px solid var(--border);border-radius:5px;backdrop-filter:blur(8px)}
-.toolbar .sep{width:1px;height:18px;background:var(--border2);margin:0 4px}
-.toolbar .lbl{font-family:var(--mono);font-size:10.5px;color:var(--dimmer);letter-spacing:.5px}
-.toolbar input[type=number]{width:64px;background:#0d131b;border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:11px;padding:4px 6px;border-radius:3px;text-align:right}
-.card{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:16px 18px;margin-bottom:16px;backdrop-filter:blur(8px)}
-.card h3{font-family:var(--mono);font-size:11px;letter-spacing:1.5px;color:var(--cyan);text-transform:uppercase;margin-bottom:12px}
-.grid-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-bottom:16px}
-.stat{background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:13px 15px;position:relative;overflow:hidden}
-.stat::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--cyan);opacity:.7}
-.stat .k{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--dimmer);text-transform:uppercase}
-.stat .v{font-family:var(--mono);font-size:19px;font-weight:700;color:var(--text);margin:5px 0 2px;font-variant-numeric:tabular-nums}
-.stat .v small{font-size:11px;color:var(--dim);font-weight:400}
-.stat .d{font-size:10px;color:var(--dimmer);font-family:var(--mono)}
-
-/* tables */
-table{border-collapse:collapse;font-family:var(--mono);font-size:11px;font-variant-numeric:tabular-nums}
-.data th{background:#101823;color:var(--dim);font-weight:500;padding:7px 10px;border:1px solid var(--border);text-align:right;letter-spacing:.5px;position:sticky;top:0}
-.data td{padding:6px 10px;border:1px solid var(--border);text-align:right;color:var(--text)}
-.data tr:hover td{background:rgba(34,211,238,.04)}
-.data td.hl{color:var(--cyan);font-weight:700}
-.data td.neg{color:var(--red)}.data td.pos{color:var(--green)}
-.table-scroll{overflow:auto;max-height:calc(100vh - 320px);border:1px solid var(--border);border-radius:5px}
-
-/* VE grid */
-.vegrid td,.vegrid th{border:1px solid #16202c;padding:0;min-width:56px;height:26px;text-align:center}
-.vegrid th{background:#0e1520;color:var(--dim);font-weight:500;padding:4px 6px;position:sticky;top:0;font-size:10.5px}
-.vegrid th.rowh{position:sticky;left:0;z-index:2;text-align:right}
-.vegrid td input{width:100%;height:100%;border:none;background:transparent;color:#060a0e;font-family:var(--mono);font-size:11px;text-align:center;font-weight:600}
-.vegrid td input:focus{outline:2px solid var(--cyan);outline-offset:-2px}
-.ve-scroll{overflow:auto;max-height:calc(100vh - 300px);border-radius:5px;box-shadow:0 8px 30px rgba(0,0,0,.4)}
-
-/* dyno */
-#dynoCanvas{width:100%;display:block;background:#0a0e13;border:1px solid var(--border);border-radius:6px}
-.legend{display:flex;gap:18px;font-family:var(--mono);font-size:11px;margin:10px 0}
-.legend span{display:flex;align-items:center;gap:6px;color:var(--dim)}
-.sw{width:22px;height:3px;border-radius:2px}
-.formula{font-family:var(--mono);font-size:11px;color:var(--dim);background:#0b1119;border-left:2px solid var(--cyan);padding:8px 12px;margin:6px 0;border-radius:0 4px 4px 0;line-height:1.7}
-.formula b{color:var(--text)}
-.note{font-size:11px;color:var(--dimmer);line-height:1.7;margin-top:8px}
-.srcs{font-size:10.5px;color:var(--dimmer);line-height:2;margin-top:10px}
-.srcs a{color:var(--cyan2);text-decoration:none}
-.srcs a:hover{text-decoration:underline}
-.statusbar{position:fixed;bottom:0;left:264px;right:0;height:26px;background:#0a0e13;border-top:1px solid var(--border);display:flex;align-items:center;gap:20px;padding:0 18px;font-family:var(--mono);font-size:10px;color:var(--dimmer);z-index:5}
-.statusbar b{color:var(--cyan);font-weight:500}
-.toast{position:fixed;top:100px;right:20px;background:#0e1a17;border:1px solid var(--green);color:var(--green);font-family:var(--mono);font-size:11px;padding:10px 16px;border-radius:5px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:99;box-shadow:0 8px 30px rgba(0,0,0,.5)}
-@media(max-width:980px){aside{display:none}.statusbar{left:0}}
-
-/* =========================================================
-   AZNUR THEME - COLOR + FONT ONLY
-   Layout, spacing, sizing, structure and behavior are unchanged.
-   Palette/font matched to the current Aznur Image Compressor site.
-   ========================================================= */
-:root{
-  --bg:#fafafa;
-  --bg2:#fafafa;
-  --panel:#fff;
-  --panel2:#fafafa;
-  --border:#e7e5e4;
-  --border2:#d6d3d1;
-  --text:#1c1917;
-  --dim:#57534e;
-  --dimmer:#78716c;
-  --cyan:#f59e0b;
-  --cyan2:#d97706;
-  --green:#10b981;
-  --yellow:#f59e0b;
-  --orange:#d97706;
-  --red:#ef4444;
-  --mono:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#161313; --surface:#1c1818; --active:#211d1d;
+  --fg:#f1eeee; --dim:#9a9898; --faint:#646262;
+  --line:#302c2c; --accent:#f59e0b; --accent-fg:#161313;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#161313; --surface:#1c1818; --active:#211d1d;
+    --fg:#f1eeee; --dim:#9a9898; --faint:#646262;
+    --line:#302c2c; --accent:#f59e0b; --accent-fg:#161313;
+  }
 }
 
+*,*::before,*::after{ box-sizing:border-box; }
+html,body{ margin:0; padding:0; height:100%; }
 body{
+  font:13px/1.55 var(--font);
+  background:var(--bg); color:var(--fg);
+  display:flex; flex-direction:column;
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+[hidden],.hidden{ display:none !important; }
+:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; border-radius:2px; }
+button{ font:inherit; color:inherit; cursor:pointer; }
+a{ color:inherit; text-decoration:none; }
+@media (prefers-reduced-motion: reduce){ *,*::before,*::after{ transition:none !important; animation:none !important; } }
+
+/* ---------- Topbar ---------- */
+.topbar{ border-bottom:1px solid var(--line); background:var(--surface); flex:0 0 auto; }
+.topbar-inner{
+  display:flex; align-items:center; gap:1rem;
+  padding:.65rem 1rem; flex-wrap:wrap;
+}
+.brand{ font-size:14px; font-weight:600; letter-spacing:-.01em; flex:0 0 auto; }
+.brand .slash{ color:var(--faint); margin:0 .1em; }
+.topbar-tools{ display:flex; align-items:center; gap:.35rem; flex-wrap:wrap; }
+.topbar-tools .eyebrow{ margin:0; }
+.proj-wrap{ display:flex; align-items:center; gap:.4rem; margin-left:auto; }
+.proj-wrap input{
+  min-width:200px; min-height:30px;
+  padding:.25rem .55rem;
   background:var(--bg);
-  color:var(--text);
-  font-family:var(--sans);
+  border:1px solid var(--line); border-radius:var(--radius);
+  font:inherit; font-size:12px; color:var(--fg);
 }
 
-::-webkit-scrollbar-thumb{background:#d6d3d1}
-::-webkit-scrollbar-thumb:hover{background:#a8a29e}
-
-header{
-  background:linear-gradient(180deg,#fff,#fafafa);
-  border-bottom-color:var(--border);
+/* ---------- Tabs ---------- */
+.tabs{
+  display:flex; gap:0;
+  padding:0 1rem;
+  overflow-x:auto;
+  border-top:1px solid var(--line);
 }
-
-.logo{
-  color:var(--cyan);
-  text-shadow:none;
-}
-
-button{
-  background:#fff;
-  color:var(--cyan2);
-  border-color:var(--border);
-  font-family:var(--sans);
-}
-
-button:hover{
-  border-color:var(--cyan);
-  background:#fffbeb;
-  box-shadow:0 0 0 2px rgba(245,158,11,.08);
-}
-
-button.primary{
-  background:var(--cyan);
-  color:#fff;
-  border-color:var(--cyan);
-}
-
-button.primary:hover{
-  background:var(--cyan2);
-  border-color:var(--cyan2);
-}
-
-button.warn{color:var(--orange)}
-button.warn:hover{
-  border-color:var(--orange);
-  background:#fff7ed;
-}
-
-.proj input,
-.f input,.f select,
-.toolbar input[type=number]{
-  background:#fff;
-  color:var(--text);
-  border-color:var(--border);
-  font-family:var(--sans);
-}
-
 .tab{
-  font-family:var(--sans);
+  background:transparent; border:0;
+  padding:.55rem .85rem;
+  min-height:38px;
+  color:var(--dim);
+  font-size:11.5px;
+  font-weight:500;
+  letter-spacing:.02em;
+  border-bottom:2px solid transparent;
+  margin-bottom:-1px;
+  cursor:pointer;
+  white-space:nowrap;
 }
-.tab.on{
-  color:var(--cyan2);
-  border-bottom-color:var(--cyan);
-}
+.tab:hover{ color:var(--fg); }
+.tab[aria-selected="true"]{ color:var(--fg); border-bottom-color:var(--accent); }
 
+/* ---------- Layout ---------- */
+#wrap{ display:flex; flex:1; overflow:hidden; }
 aside{
-  background:#fafafa;
-  border-right-color:var(--border);
+  width:290px; flex:0 0 290px;
+  border-right:1px solid var(--line);
+  background:var(--surface);
+  overflow-y:auto;
+  padding-bottom:1rem;
 }
-
 main{
+  flex:1; overflow:auto;
+  padding:1rem 1.25rem 2rem;
   background:var(--bg);
 }
 
-.sec{
-  border-bottom-color:var(--border);
+/* ---------- Sidebar sections ---------- */
+.sec{ border-bottom:1px solid var(--line); }
+.sec-h{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:.65rem .9rem;
+  min-height:38px;
+  cursor:pointer; user-select:none;
 }
-
-.sec-h span,
-.card h3,
-.stat .v,
-.data td.hl{
-  color:var(--cyan2);
-}
-
-.f label,
-.toolbar .lbl,
-.stat .k,
-.stat .d,
-.note,
-.srcs,
-.statusbar{
+.sec-h span{
+  font-size:10px;
+  letter-spacing:.12em;
   color:var(--dim);
+  text-transform:uppercase;
+  font-weight:600;
 }
-
-.f input,.f select{
-  background:#fff;
-  color:var(--text);
+.sec-h::after{
+  content:'▸';
+  color:var(--faint);
+  font-size:10px;
+  transition:transform .2s;
 }
+.sec.open .sec-h::after{ transform:rotate(90deg); }
+.sec-b{ display:none; padding:.25rem .9rem .85rem; }
+.sec.open .sec-b{ display:block; }
 
-.f input:focus,.f select:focus{
-  border-color:var(--cyan);
+.f{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:.5rem; margin:.35rem 0;
 }
-
-input[type=range]{
-  background:#d6d3d1;
+.f label{ color:var(--dim); font-size:11.5px; flex:1; }
+.f input, .f select{
+  width:104px; min-height:28px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  color:var(--fg);
+  font:inherit; font-size:11.5px;
+  padding:.25rem .45rem;
+  border-radius:var(--radius);
+  text-align:right;
 }
-
-input[type=range]::-webkit-slider-thumb{
-  background:var(--cyan);
-  box-shadow:0 1px 4px rgba(245,158,11,.25);
+.f select{ text-align:left; }
+.f input:focus-visible, .f select:focus-visible{ outline-offset:1px; }
+.f .u{
+  color:var(--faint);
+  font-size:10px;
+  width:38px;
+  font-family:inherit;
 }
 
 .readout{
-  background:#fffbeb;
-  border-color:#fde68a;
+  margin:.85rem .9rem;
+  padding:.6rem .75rem;
+  background:var(--active);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  font-size:11px;
   color:var(--dim);
+  line-height:1.7;
+}
+.readout b{ color:var(--fg); font-weight:600; }
+
+/* ---------- Panes ---------- */
+.pane{ display:none; }
+.pane.on{ display:block; }
+.pane h2{
+  font-size:13px; font-weight:600; letter-spacing:.02em;
+  margin:.25rem 0 .35rem;
+}
+.pane .sub{
+  color:var(--dim); font-size:11.5px;
+  margin:0 0 .85rem; max-width:72ch;
 }
 
-.readout b{
-  color:var(--cyan2);
+/* ---------- Toolbar ---------- */
+.toolbar{
+  display:flex; align-items:center; gap:.35rem;
+  flex-wrap:wrap;
+  margin:.6rem 0 .85rem;
+  padding:.55rem .75rem;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+}
+.toolbar .sep{ width:1px; height:16px; background:var(--line); margin:0 .25rem; }
+.toolbar .lbl{ font-size:10px; letter-spacing:.12em; color:var(--dim); text-transform:uppercase; font-weight:600; }
+.toolbar input[type=number]{
+  width:60px; min-height:28px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  color:var(--fg);
+  font:inherit; font-size:11.5px;
+  padding:.25rem .45rem;
+  border-radius:var(--radius);
+  text-align:right;
+}
+.toolbar input[type=checkbox]{
+  accent-color:var(--accent);
+  margin:0;
 }
 
-.toolbar,
+button, .btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-height:30px; padding:.3rem .7rem;
+  font:inherit; font-size:11.5px; font-weight:500;
+  color:var(--fg);
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  transition:border-color .15s, background .15s;
+}
+button:hover, .btn:hover{ border-color:var(--accent); }
+button.primary, .btn.accent{
+  background:var(--accent);
+  color:var(--accent-fg);
+  border-color:var(--accent);
+}
+button.primary:hover{ filter:brightness(1.05); }
+button.warn{ color:var(--accent); }
+button.warn:hover{ border-color:var(--accent); }
+
+/* ---------- Cards ---------- */
 .card{
-  background:#fff;
-  border-color:var(--border);
-  box-shadow:var(--sh,0 1px 2px rgba(0,0,0,.05));
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:6px;
+  padding:.85rem 1rem;
+  margin-bottom:.85rem;
+}
+.card h3{
+  font-size:10px; letter-spacing:.12em;
+  color:var(--accent);
+  text-transform:uppercase;
+  font-weight:600;
+  margin:0 0 .6rem;
+  padding-bottom:.5rem;
+  border-bottom:1px solid var(--line);
 }
 
-.toolbar .sep{
-  background:var(--border2);
+.grid-cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+  gap:.6rem;
+  margin-bottom:.85rem;
 }
-
 .stat{
-  background:#fafafa;
-  border-color:var(--border);
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:.7rem .8rem;
 }
-
-.stat::before{
-  background:var(--cyan);
+.stat .k{
+  font-size:10px; letter-spacing:.12em;
+  color:var(--dim); text-transform:uppercase;
+  font-weight:600;
 }
-
 .stat .v{
-  color:var(--text);
+  font-size:18px; font-weight:600;
+  color:var(--fg);
+  margin:.25rem 0 .15rem;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:-.02em;
+  line-height:1.15;
+  word-break:break-word;
 }
+.stat .v small{ font-size:11px; color:var(--dim); font-weight:400; }
+.stat .d{ font-size:11px; color:var(--dim); line-height:1.5; }
+.stat .d span{ color:var(--accent); }
 
+/* ---------- Data tables ---------- */
+table{
+  border-collapse:collapse;
+  font-size:11px;
+  font-variant-numeric:tabular-nums;
+}
 .data th{
-  background:#fafaf9;
+  background:var(--bg);
   color:var(--dim);
-  border-color:var(--border);
+  font-weight:600;
+  padding:.4rem .55rem;
+  border-bottom:1px solid var(--line);
+  text-align:right;
+  letter-spacing:.05em;
+  font-size:10.5px;
+  position:sticky; top:0; z-index:1;
 }
-
 .data td{
-  border-color:var(--border);
-  color:var(--text);
+  padding:.32rem .55rem;
+  border-bottom:1px dashed var(--line);
+  text-align:right;
+  color:var(--fg);
 }
-
-.data tr:hover td{
-  background:#fffbeb;
-}
-
-.data td.neg{color:var(--red)}
-.data td.pos{color:var(--green)}
-
+.data tr:last-child td{ border-bottom:0; }
+.data tr:hover td{ background:var(--active); }
+.data td.hl{ color:var(--accent); font-weight:600; }
+.data td.neg{ color:var(--accent); font-weight:600; }
+.data td.pos{ color:var(--fg); font-weight:600; }
 .table-scroll{
-  border-color:var(--border);
+  overflow:auto;
+  max-height:calc(100vh - 340px);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  background:var(--surface);
 }
 
-.vegrid td,.vegrid th{
-  border-color:var(--border);
+/* ---------- VE grid ---------- */
+.vegrid td, .vegrid th{
+  border:1px solid var(--line);
+  padding:0;
+  min-width:56px; height:26px;
+  text-align:center;
 }
-
 .vegrid th{
-  background:#fafaf9;
+  background:var(--bg);
   color:var(--dim);
+  font-weight:600;
+  padding:.3rem .4rem;
+  position:sticky; top:0; z-index:1;
+  font-size:10.5px;
 }
-
+.vegrid th.rowh{
+  position:sticky; left:0; z-index:2;
+  text-align:right;
+}
 .vegrid td input{
-  color:#1c1917;
-  font-family:var(--sans);
+  width:100%; height:100%;
+  border:none; background:transparent;
+  color:#201d1d;
+  font-family:inherit;
+  font-size:11px;
+  text-align:center;
+  font-weight:600;
+  padding:0;
 }
-
 .vegrid td input:focus{
-  outline-color:var(--cyan);
+  outline:2px solid var(--accent);
+  outline-offset:-2px;
 }
-
 .ve-scroll{
-  box-shadow:0 2px 8px rgba(0,0,0,.06);
+  overflow:auto;
+  max-height:calc(100vh - 320px);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  background:var(--surface);
 }
 
+/* ---------- Dyno ---------- */
 #dynoCanvas{
-  background:#fff;
-  border-color:var(--border);
+  width:100%;
+  display:block;
+  background:var(--bg);
+  border:1px solid var(--line);
+  border-radius:6px;
 }
+.legend{
+  display:flex; gap:1rem; flex-wrap:wrap;
+  font-size:11px;
+  margin:.6rem 0;
+}
+.legend span{ display:flex; align-items:center; gap:.4rem; color:var(--dim); }
+.sw{ width:20px; height:2px; border-radius:1px; }
 
+/* ---------- Formula + sources ---------- */
 .formula{
+  font-size:11px;
   color:var(--dim);
-  background:#fffbeb;
-  border-left-color:var(--cyan);
+  background:var(--active);
+  border-left:2px solid var(--accent);
+  padding:.5rem .8rem;
+  margin:.5rem 0;
+  border-radius:0 var(--radius) var(--radius) 0;
+  line-height:1.7;
 }
-
-.formula b{
-  color:var(--text);
+.formula b{ color:var(--fg); font-weight:600; }
+.note{
+  font-size:11px;
+  color:var(--dim);
+  line-height:1.7;
+  margin-top:.5rem;
 }
-
-.srcs a{
-  color:var(--cyan2);
+.srcs{
+  font-size:10.5px;
+  color:var(--faint);
+  line-height:2;
+  margin-top:.65rem;
 }
+.srcs a{ color:var(--accent); }
+.srcs a:hover{ text-decoration:underline; }
 
+/* ---------- Statusbar ---------- */
 .statusbar{
-  background:#fff;
-  border-top-color:var(--border);
+  flex:0 0 auto;
+  display:flex; align-items:center; gap:1rem;
+  padding:.4rem .9rem;
+  border-top:1px solid var(--line);
+  background:var(--surface);
+  font-size:10.5px;
+  color:var(--dim);
+  font-variant-numeric:tabular-nums;
+  overflow-x:auto;
+  white-space:nowrap;
+}
+.statusbar b{ color:var(--accent); font-weight:600; }
+.sb-info{ flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; }
+.sb-right{ display:flex; align-items:center; gap:.4rem; flex-shrink:0; }
+.sb-right select{
+  min-height:24px;
+  padding:0 .4rem;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:3px;
+  color:var(--fg);
+  font:inherit;
+  font-size:10.5px;
 }
 
-.statusbar b{
-  color:var(--cyan2);
-}
-
+/* ---------- Toast ---------- */
 .toast{
-  background:#ecfdf5;
-  border-color:var(--green);
-  color:#047857;
-  box-shadow:0 4px 12px rgba(0,0,0,.08);
+  position:fixed;
+  top:1rem; right:1rem;
+  padding:.55rem .7rem;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-left:3px solid var(--accent);
+  border-radius:var(--radius);
+  font-size:12px;
+  color:var(--fg);
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+  opacity:0;
+  transition:opacity .2s;
+  pointer-events:none;
+  z-index:100;
+  max-width:340px;
 }
+.toast-mark{ color:var(--accent); font-weight:600; margin-right:.5rem; }
 
-.pane h2{color:var(--text)}
+/* ---------- Responsive ---------- */
+@media (max-width:980px){
+  aside{ display:none; }
+  .proj-wrap input{ min-width:140px; }
+}
+@media (max-width:620px){
+  .topbar-inner{ padding:.55rem .75rem; }
+  .topbar-tools .eyebrow{ display:none; }
+  .proj-wrap{ margin-left:0; width:100%; }
+  .proj-wrap input{ flex:1; min-width:0; }
+  main{ padding:.75rem; }
+}
 </style>
 </head>
 <body>
-<header>
-  <div class="hd-top">
-    <div class="logo">ENGINE CALCULATOR<small>// theoretical model &times; real-world benchmark (Curated by Sadman Aznur)</small></div>
-    <div class="hd-btns">
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="#">aznur<span class="slash">/</span>engine</a>
+    <div class="topbar-tools">
       <button onclick="newProject()">New</button>
       <button onclick="saveProject()">Save</button>
       <button onclick="document.getElementById('fileOpen').click()">Open…</button>
-      <input type="file" id="fileOpen" accept=".json" style="display:none" onchange="openProject(event)">
-      <button class="primary" onclick="exportAllCSV()">Export CSV…</button>
-      <button onclick="gotoTab('dyno')">HP / ET Calc</button>
-      <button onclick="gotoTab('fuel')">Injector Calc</button>
+      <input type="file" id="fileOpen" accept=".json" hidden onchange="openProject(event)">
+      <button class="primary" onclick="exportAllCSV()">Export CSV</button>
+      <button onclick="copyDiag()">Diagnostics</button>
+      <label class="eyebrow" for="theme1" style="margin-left:.4rem;">Theme</label>
+      <select id="theme1" aria-label="Theme" style="min-width:96px;min-height:30px;font-size:11.5px;">
+        <option value="system">System</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+      </select>
     </div>
-    <div class="proj">Project: <input id="projName" value="New Engine Project" onchange="S.project=this.value"></div>
+    <div class="proj-wrap">
+      <label class="eyebrow" for="projName" style="margin:0;">Project</label>
+      <input id="projName" value="New Engine Project" onchange="S.project=this.value;scheduleSave()">
+    </div>
   </div>
-  <nav class="tabs" id="tabs">
-    <div class="tab on" data-t="dash">Dashboard</div>
-    <div class="tab" data-t="ve">VE Table (%)</div>
-    <div class="tab" data-t="timing">Timing - MBT (° BTDC)</div>
-    <div class="tab" data-t="afr">AFR / IAT Table</div>
-    <div class="tab" data-t="fuel">Fuel &amp; Injectors</div>
-    <div class="tab" data-t="dyno">Dyno Graph</div>
-    <div class="tab" data-t="bench">Real-World Benchmarks</div>
-    <div class="tab" data-t="theory">Theory &amp; Sources</div>
+  <nav class="tabs" id="tabs" role="tablist">
+    <button class="tab on" data-t="dash" role="tab" aria-selected="true">Dashboard</button>
+    <button class="tab" data-t="ve" role="tab" aria-selected="false">VE Table (%)</button>
+    <button class="tab" data-t="timing" role="tab" aria-selected="false">Timing — MBT (° BTDC)</button>
+    <button class="tab" data-t="afr" role="tab" aria-selected="false">AFR / IAT</button>
+    <button class="tab" data-t="fuel" role="tab" aria-selected="false">Fuel &amp; Injectors</button>
+    <button class="tab" data-t="dyno" role="tab" aria-selected="false">Dyno Graph</button>
+    <button class="tab" data-t="bench" role="tab" aria-selected="false">Benchmarks</button>
+    <button class="tab" data-t="theory" role="tab" aria-selected="false">Theory &amp; Sources</button>
   </nav>
 </header>
 
 <div id="wrap">
+
 <aside id="sidebar">
-  <div class="sec open"><div class="sec-h"><span>Engine Geometry</span></div><div class="sec-b">
+  <div class="sec open" data-id="geom"><div class="sec-h"><span>Engine Geometry</span></div><div class="sec-b">
     <div class="f"><label>Cylinders</label><input type="number" id="p_cyl" value="4" min="1" max="16"><span class="u">cyl</span></div>
     <div class="f"><label>Bore</label><input type="number" id="p_bore" value="86" step="0.1"><span class="u">mm</span></div>
     <div class="f"><label>Stroke</label><input type="number" id="p_stroke" value="86" step="0.1"><span class="u">mm</span></div>
@@ -408,7 +500,7 @@ input[type=range]::-webkit-slider-thumb{
     <div class="f"><label>Intake valve closes</label><input type="number" id="p_ivc" value="62" step="1"><span class="u">°ABDC</span></div>
     <div class="f"><label>Redline</label><input type="number" id="p_redline" value="7400" step="100"><span class="u">rpm</span></div>
   </div></div>
-  <div class="sec open"><div class="sec-h"><span>Induction / Boost</span></div><div class="sec-b">
+  <div class="sec open" data-id="induction"><div class="sec-h"><span>Induction / Boost</span></div><div class="sec-b">
     <div class="f"><label>Aspiration</label><select id="p_asp"><option value="na">Naturally aspirated</option><option value="turbo" selected>Turbocharged</option><option value="sc">Supercharged</option></select></div>
     <div class="f"><label>Boost (peak)</label><input type="number" id="p_boost" value="11" step="0.5"><span class="u">psi</span></div>
     <div class="f"><label>Full boost by</label><input type="number" id="p_boostrpm" value="3200" step="100"><span class="u">rpm</span></div>
@@ -417,13 +509,13 @@ input[type=range]::-webkit-slider-thumb{
     <div class="f"><label>Ambient temp</label><input type="number" id="p_tamb" value="25"><span class="u">°C</span></div>
     <div class="f"><label>Ambient press.</label><input type="number" id="p_pamb" value="14.7" step="0.1"><span class="u">psia</span></div>
   </div></div>
-  <div class="sec open"><div class="sec-h"><span>Breathing / Cam</span></div><div class="sec-b">
+  <div class="sec open" data-id="breathing"><div class="sec-h"><span>Breathing / Cam</span></div><div class="sec-b">
     <div class="f"><label>Peak VE</label><input type="number" id="p_vemax" value="95" min="50" max="125"><span class="u">%</span></div>
     <div class="f"><label>Tuned (peak) rpm</label><input type="number" id="p_rpmpeak" value="7400" step="100"><span class="u">rpm</span></div>
     <div class="f"><label>Cam aggressiveness</label><input type="range" id="p_cam" value="50" min="0" max="100"><span class="u" id="camLbl">street</span></div>
     <div class="f"><label>Port flow limit</label><input type="number" id="p_port" value="8000" step="100"><span class="u">rpm</span></div>
   </div></div>
-  <div class="sec open"><div class="sec-h"><span>Fuel Parameters</span></div><div class="sec-b">
+  <div class="sec open" data-id="fuel"><div class="sec-h"><span>Fuel Parameters</span></div><div class="sec-b">
     <div class="f"><label>Fuel</label><select id="p_fuel"></select></div>
     <div class="f"><label>Target AFR (power)</label><input type="number" id="p_afr" value="12.5" step="0.1"><span class="u">:1</span></div>
     <div class="f"><label>Intake air temp</label><input type="number" id="p_iat" value="40"><span class="u">°C</span></div>
@@ -437,10 +529,9 @@ input[type=range]::-webkit-slider-thumb{
 
 <main id="main">
 
-<!-- ═══ DASHBOARD ═══ -->
 <div class="pane on" id="pane-dash">
   <h2>Engine Dashboard</h2>
-  <div class="sub">Live results from the theoretical speed-density model. Every figure recomputes as you edit parameters.</div>
+  <p class="sub">Live results from the theoretical speed-density model. Every figure recomputes as you edit parameters.</p>
   <div class="grid-cards" id="dashCards"></div>
   <div class="card"><h3>Core Formulas Used</h3>
     <div class="formula">Displacement &nbsp;<b>Vd = N · π/4 · B² · S</b> &nbsp;·&nbsp; Mean piston speed &nbsp;<b>Cm = 2 · S · n</b></div>
@@ -450,79 +541,77 @@ input[type=range]::-webkit-slider-thumb{
   </div>
 </div>
 
-<!-- ═══ VE TABLE ═══ -->
 <div class="pane" id="pane-ve">
   <h2>Volumetric Efficiency Table (%)</h2>
-  <div class="sub">Editable VE map - MAP (psig / kPa) rows × RPM columns. Click a cell and type to edit. Model-generated by default.</div>
+  <p class="sub">Editable VE map — MAP (psig / kPa) rows × RPM columns. Click a cell and type to edit. Model-generated by default. Arrow keys navigate; Enter/Tab commit and move.</p>
   <div class="toolbar">
-    <span class="lbl">VE (%) &nbsp; MAP ↑ &nbsp; × &nbsp; RPM →</span><span class="sep"></span>
+    <span class="lbl">VE (%) · MAP ↑ × RPM →</span><span class="sep"></span>
     <button class="primary" onclick="recalcVE()">Recalculate VE</button>
     <button onclick="nudgeVE(1)">+1</button>
     <button onclick="nudgeVE(-1)">−1</button>
     <button class="warn" onclick="smoothVE()">~ Smooth</button>
     <button onclick="clearVE()">× Clear</button><span class="sep"></span>
-    <span class="lbl">Fill all:</span><input type="number" id="veFill" value="80"><button onclick="fillVE()">Apply</button>
+    <span class="lbl">Fill all:</span>
+    <input type="number" id="veFill" value="80">
+    <button onclick="fillVE()">Apply</button>
     <button class="warn" onclick="recalcVE()">Restore Defaults</button><span class="sep"></span>
     <button onclick="exportCSV('ve')">Export CSV</button>
   </div>
   <div class="ve-scroll" id="veWrap"></div>
 </div>
 
-<!-- ═══ TIMING ═══ -->
 <div class="pane" id="pane-timing">
-  <h2>Ignition Timing - MBT &amp; Knock-Limited (° BTDC)</h2>
-  <div class="sub">MBT estimate from load/RPM, clamped by the knock model (octane requirement vs. fuel). Knock-limited cells are highlighted.</div>
+  <h2>Ignition Timing — MBT &amp; Knock-Limited (° BTDC)</h2>
+  <p class="sub">MBT estimate from load/RPM, clamped by the knock model (octane requirement vs. fuel). Knock-limited cells are highlighted.</p>
   <div class="toolbar">
     <button class="primary" onclick="renderTiming()">Recalculate</button><span class="sep"></span>
     <button onclick="exportCSV('timing')">Export CSV</button>
   </div>
   <div class="table-scroll" id="timingWrap"></div>
-  <div class="note">Model: MBT ≈ 10 + 26·(1 − load) + rpm/300 - advances with RPM, retards with load. Knock limit from required-octane model: RON<sub>req</sub> rises with CR, boost and charge temperature, falls with richer AFR. Deficit leads to timing retard at ~1.5° per RON.</div>
+  <p class="note">Model: MBT ≈ 10 + 26·(1 − load) + rpm/300 — advances with RPM, retards with load. Knock limit from required-octane model: RON<sub>req</sub> rises with CR, boost and charge temperature, falls with richer AFR. Deficit leads to timing retard at ~1.5° per RON.</p>
 </div>
 
-<!-- ═══ AFR / IAT ═══ -->
 <div class="pane" id="pane-afr">
   <h2>AFR &amp; Intake-Air-Temperature Correction</h2>
-  <div class="sub">Target lambda table by load, and density correction of charge air (ideal-gas law) across IAT.</div>
+  <p class="sub">Target lambda table by load, and density correction of charge air (ideal-gas law) across IAT.</p>
   <div class="toolbar"><button onclick="exportCSV('afr')">Export CSV</button></div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px" id="afrWrap"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;" id="afrWrap"></div>
 </div>
 
-<!-- ═══ FUEL ═══ -->
 <div class="pane" id="pane-fuel">
   <h2>Fuel System &amp; Injector Sizing</h2>
-  <div class="sub">Mass fuel flow from the airflow model; injector duty cycle at your chosen static flow and base pressure.</div>
+  <p class="sub">Mass fuel flow from the airflow model; injector duty cycle at your chosen static flow and base pressure.</p>
   <div class="toolbar"><button class="primary" onclick="renderFuel()">Recalculate</button><span class="sep"></span><button onclick="exportCSV('fuel')">Export CSV</button></div>
   <div class="grid-cards" id="fuelCards"></div>
   <div class="table-scroll" id="fuelWrap"></div>
 </div>
 
-<!-- ═══ DYNO ═══ -->
 <div class="pane" id="pane-dyno">
   <h2>Dyno Simulation</h2>
-  <div class="sub">Full-throttle sweep from the theoretical model - horsepower, torque and manifold pressure vs. RPM. Hover the graph to inspect.</div>
+  <p class="sub">Full-throttle sweep from the theoretical model — horsepower, torque and manifold pressure vs. RPM. Hover the graph to inspect.</p>
   <div class="toolbar">
     <label class="lbl"><input type="checkbox" id="ckHP" checked onchange="drawDyno()"> HP / kW</label>
     <label class="lbl"><input type="checkbox" id="ckTQ" checked onchange="drawDyno()"> Torque (lb·ft / N·m)</label>
     <label class="lbl"><input type="checkbox" id="ckMAP" checked onchange="drawDyno()"> MAP (psig / kPa)</label><span class="sep"></span>
-    <span class="lbl">Sweep from</span><input type="number" id="d_from" value="1500" step="100">
-    <span class="lbl">to</span><input type="number" id="d_to" value="7400" step="100"><span class="sep"></span>
+    <span class="lbl">Sweep from</span>
+    <input type="number" id="d_from" value="1500" step="100">
+    <span class="lbl">to</span>
+    <input type="number" id="d_to" value="7400" step="100"><span class="sep"></span>
     <button class="primary" onclick="renderDyno()">Rerun Dyno</button>
     <button onclick="exportCSV('dyno')">Export CSV</button>
   </div>
   <div class="legend">
-    <span><span class="sw" style="background:#22d3ee"></span>hp / kW</span>
-    <span><span class="sw" style="background:#fbbf24"></span>lb·ft / N·m</span>
-    <span><span class="sw" style="background:#34d399"></span>MAP (psig / kPa)</span>
+    <span><span class="sw" id="swHP"></span>hp / kW</span>
+    <span><span class="sw" id="swTQ"></span>lb·ft / N·m</span>
+    <span><span class="sw" id="swMAP"></span>MAP (psig / kPa)</span>
   </div>
   <canvas id="dynoCanvas" height="430"></canvas>
-  <div class="note" id="dynoPeaks"></div>
+  <p class="note" id="dynoPeaks"></p>
 </div>
 
-<!-- ═══ BENCHMARKS ═══ -->
 <div class="pane" id="pane-bench">
-  <h2>Real-World Benchmarks - Theory vs. Published Dyno Data</h2>
-  <div class="sub">The same theoretical model run on well-documented production engines, compared against figures published by manufacturers and the automotive press. Positive Δ = model over-predicts.</div>
+  <h2>Real-World Benchmarks — Theory vs. Published Dyno Data</h2>
+  <p class="sub">The same theoretical model run on well-documented production engines, compared against figures published by manufacturers and the automotive press. Positive Δ = model over-predicts.</p>
   <div class="toolbar">
     <button class="primary" onclick="renderBench()">Run All Benchmarks</button><span class="sep"></span>
     <button onclick="exportCSV('bench')">Export CSV</button>
@@ -530,46 +619,57 @@ input[type=range]::-webkit-slider-thumb{
   <div class="table-scroll" id="benchWrap"></div>
   <div class="srcs">
     Published figures sourced from:
-    <a href="https://eureka.patsnap.com/blog/machinery-tech-resources/ls3-engine/" target="_blank">PatSnap - GM LS3 spec sheet</a> ·
-    <a href="https://carbuzz.com/ls3-engine/" target="_blank">CarBuzz - LS3</a> ·
-    <a href="https://my.prostreetonline.com/2026/08/30/k20a2-vs-k20a3-acura-rsx-engine-differences/" target="_blank">ProStreet - K20A2</a> ·
-    <a href="https://www.jdmmeikan.com/cars/dc2" target="_blank">JDM Meikan - B18C Integra Type R</a> ·
-    <a href="https://bikkycoder.github.io/Supra-mk4/" target="_blank">Supra MK4 guide - 2JZ-GTE</a> ·
-    <a href="https://stanceauto.co.uk/2jzgte-build-guide" target="_blank">StanceAuto - 2JZ-GTE</a> ·
-    <a href="https://www.motormatchup.com/catalog/Subaru/WRX-STI/2017/Base-4DR-AWD-Sedan" target="_blank">MotorMatchup - EJ257 WRX STI</a> ·
-    <a href="https://crawfordperformance.com/blogs/news/subaru-sti-engine-guide" target="_blank">Crawford Performance - EJ257</a>
+    <a href="https://eureka.patsnap.com/blog/machinery-tech-resources/ls3-engine/" target="_blank">PatSnap — GM LS3 spec sheet</a> ·
+    <a href="https://carbuzz.com/ls3-engine/" target="_blank">CarBuzz — LS3</a> ·
+    <a href="https://my.prostreetonline.com/2026/08/30/k20a2-vs-k20a3-acura-rsx-engine-differences/" target="_blank">ProStreet — K20A2</a> ·
+    <a href="https://www.jdmmeikan.com/cars/dc2" target="_blank">JDM Meikan — B18C Integra Type R</a> ·
+    <a href="https://bikkycoder.github.io/Supra-mk4/" target="_blank">Supra MK4 guide — 2JZ-GTE</a> ·
+    <a href="https://stanceauto.co.uk/2jzgte-build-guide" target="_blank">StanceAuto — 2JZ-GTE</a> ·
+    <a href="https://www.motormatchup.com/catalog/Subaru/WRX-STI/2017/Base-4DR-AWD-Sedan" target="_blank">MotorMatchup — EJ257 WRX STI</a> ·
+    <a href="https://crawfordperformance.com/blogs/news/subaru-sti-engine-guide" target="_blank">Crawford Performance — EJ257</a>
   </div>
 </div>
 
-<!-- ═══ THEORY ═══ -->
 <div class="pane" id="pane-theory">
   <h2>Theoretical Background &amp; Academic Sources</h2>
-  <div class="sub">The model implements the standard speed-density framework taught in engine fundamentals (Heywood, <i>Internal Combustion Engine Fundamentals</i>), with semi-empirical VE, friction and knock sub-models of the kind published in SAE and Elsevier journals.</div>
+  <p class="sub">The model implements the standard speed-density framework taught in engine fundamentals (Heywood, <i>Internal Combustion Engine Fundamentals</i>), with semi-empirical VE, friction and knock sub-models of the kind published in SAE and Elsevier journals.</p>
   <div class="card"><h3>Sub-models</h3>
-    <div class="formula"><b>Volumetric efficiency</b> - Gaussian breathing curve around tuned rpm, scavenging gain with pressure ratio, port-flow choking at high rpm. Consistent with semi-empirical VE models in the literature (Kakaee &amp; Mashadi, <i>Proc. IMechE Part D</i>, 2017).</div>
-    <div class="formula"><b>Charge temperature (forced induction)</b> - T₂ = T₁·(1 + (PR<sup>0.283</sup> − 1)/η<sub>c</sub>) for the compressor, then intercooler: T₃ = T₂ − η<sub>ic</sub>·(T₂ − T<sub>amb</sub>).</div>
-    <div class="formula"><b>Dynamic compression ratio</b> - DCR computed from intake-valve-closing point (effective stroke), the classic Lanchester/DCR approach used for knock assessment.</div>
-    <div class="formula"><b>Friction</b> - FMEP = 30 + 8·(n/1000) + 1.5·(n/1000)² kPa (Chen–Flynn style, mean-piston-speed dependent).</div>
-    <div class="formula"><b>Knock</b> - Required-octane index from CR, boost, charge temp and enrichment; timing retarded 1.5°/RON of deficit, torque loss ≈ 1%/deg from MBT.</div>
+    <div class="formula"><b>Volumetric efficiency</b> — Gaussian breathing curve around tuned rpm, scavenging gain with pressure ratio, port-flow choking at high rpm. Consistent with semi-empirical VE models in the literature (Kakaee &amp; Mashadi, <i>Proc. IMechE Part D</i>, 2017).</div>
+    <div class="formula"><b>Charge temperature (forced induction)</b> — T₂ = T₁·(1 + (PR<sup>0.283</sup> − 1)/η<sub>c</sub>) for the compressor, then intercooler: T₃ = T₂ − η<sub>ic</sub>·(T₂ − T<sub>amb</sub>).</div>
+    <div class="formula"><b>Dynamic compression ratio</b> — DCR computed from intake-valve-closing point (effective stroke), the classic Lanchester/DCR approach used for knock assessment.</div>
+    <div class="formula"><b>Friction</b> — FMEP = 30 + 8·(n/1000) + 1.5·(n/1000)² kPa (Chen–Flynn style, mean-piston-speed dependent).</div>
+    <div class="formula"><b>Knock</b> — Required-octane index from CR, boost, charge temp and enrichment; timing retarded 1.5°/RON of deficit, torque loss ≈ 1%/deg from MBT.</div>
   </div>
-  <div class="card"><h3>Academic references (via Scholar)</h3>
+  <div class="card"><h3>Academic references</h3>
     <div class="srcs">
-      · Kakaee, Mashadi et al. - <i>A novel volumetric efficiency model for SI engines with VVT and VVL</i>, Proc. IMechE Part D, 2017 - <a href="https://journals.sagepub.com/doi/abs/10.1177/0954407016650545" target="_blank">doi:10.1177/0954407016650545</a><br>
-      · El Hadef, Colin, Talon et al. - <i>Neural model for real-time engine volumetric efficiency estimation</i>, SAE 2013-24-0132 - <a href="https://saemobilus.sae.org/papers/neural-model-real-time-engine-volumetric-efficiency-estimation-2013-24-0132" target="_blank">SAE</a><br>
-      · Boretti, Borghi, Cantore - <i>Numerical study of volumetric efficiencies in a high-speed four-valve SI engine</i>, SAE 942533 - <a href="https://saemobilus.sae.org/papers/numerical-study-volumetric-efficiencies-a-high-speed-four-valve-spark-ignition-engine-942533" target="_blank">SAE</a><br>
-      · Soh, Chung, Kim - <i>The prediction of volumetric efficiency considering gas exchange process in SI engine</i>, SAE 871170 - <a href="https://saemobilus.sae.org/downloads/papers/871170/Full%20Text%20PDF" target="_blank">SAE</a><br>
-      · De Nola, Giardiello, Gimelli et al. - <i>VE estimation based on neural networks to reduce experimental effort in engine base calibration</i>, Fuel, 2019 - <a href="https://www.sciencedirect.com/science/article/pii/S0016236119301838" target="_blank">ScienceDirect</a><br>
-      · Gumus - <i>Effects of volumetric efficiency on performance and emissions of a dual-fueled SI engine</i>, Fuel Processing Technology, 2011 - <a href="https://www.sciencedirect.com/science/article/pii/S0378382011001597" target="_blank">ScienceDirect</a>
+      · Kakaee, Mashadi et al. — <i>A novel volumetric efficiency model for SI engines with VVT and VVL</i>, Proc. IMechE Part D, 2017 — <a href="https://journals.sagepub.com/doi/abs/10.1177/0954407016650545" target="_blank">doi:10.1177/0954407016650545</a><br>
+      · El Hadef, Colin, Talon et al. — <i>Neural model for real-time engine volumetric efficiency estimation</i>, SAE 2013-24-0132 — <a href="https://saemobilus.sae.org/papers/neural-model-real-time-engine-volumetric-efficiency-estimation-2013-24-0132" target="_blank">SAE</a><br>
+      · Boretti, Borghi, Cantore — <i>Numerical study of volumetric efficiencies in a high-speed four-valve SI engine</i>, SAE 942533 — <a href="https://saemobilus.sae.org/papers/numerical-study-volumetric-efficiencies-a-high-speed-four-valve-spark-ignition-engine-942533" target="_blank">SAE</a><br>
+      · Soh, Chung, Kim — <i>The prediction of volumetric efficiency considering gas exchange process in SI engine</i>, SAE 871170 — <a href="https://saemobilus.sae.org/downloads/papers/871170/Full%20Text%20PDF" target="_blank">SAE</a><br>
+      · De Nola, Giardiello, Gimelli et al. — <i>VE estimation based on neural networks to reduce experimental effort in engine base calibration</i>, Fuel, 2019 — <a href="https://www.sciencedirect.com/science/article/pii/S0016236119301838" target="_blank">ScienceDirect</a><br>
+      · Gumus — <i>Effects of volumetric efficiency on performance and emissions of a dual-fueled SI engine</i>, Fuel Processing Technology, 2011 — <a href="https://www.sciencedirect.com/science/article/pii/S0378382011001597" target="_blank">ScienceDirect</a>
     </div>
   </div>
-  <div class="note">This is an educational first-principles estimator - expect ±10–20% vs. a calibrated engine-dyno simulation. The Benchmarks tab quantifies the error against real published engines.</div>
+  <p class="note">This is an educational first-principles estimator — expect ±10–20% vs. a calibrated engine-dyno simulation. The Benchmarks tab quantifies the error against real published engines.</p>
 </div>
 
 </main>
 </div>
 
-<div class="statusbar" id="statusbar"></div>
+<div class="statusbar">
+  <div class="sb-info" id="statusbar"></div>
+  <div class="sb-right">
+    <label class="eyebrow" for="theme2" style="margin:0;">Theme</label>
+    <select id="theme2" aria-label="Theme">
+      <option value="system">System</option>
+      <option value="light">Light</option>
+      <option value="dark">Dark</option>
+    </select>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
+
 <script>
 /* ═══════════════ STATE ═══════════════ */
 const FUELS = {
@@ -588,26 +688,114 @@ const S = {
 };
 const $=id=>document.getElementById(id);
 const PSI2KPA=6.894757, R=287.0, PI=Math.PI;
-let VE_USER=null;               // user-edited VE grid (null = model)
-let RPM_COLS=[], MAP_ROWS=[];   // axis values
+let VE_USER=null;
+let RPM_COLS=[], MAP_ROWS=[];
+
+/* ═══════════════ THEME ═══════════════ */
+const THEME_KEY='aznur-index-theme';
+function applyTheme(value){
+  if(value==='system') document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme', value);
+  try{ localStorage.setItem(THEME_KEY, value); }catch{}
+  ['theme1','theme2'].forEach(id=>{const el=$(id); if(el) el.value=value;});
+  updateSwatches();
+  if($('pane-dyno') && $('pane-dyno').classList.contains('on') && typeof drawDyno==='function') drawDyno();
+}
+function initTheme(){
+  let stored='system';
+  try{ stored=localStorage.getItem(THEME_KEY)||'system'; }catch{}
+  applyTheme(stored);
+  ['theme1','theme2'].forEach(id=>{
+    const el=$(id);
+    if(el) el.addEventListener('change',()=>applyTheme(el.value));
+  });
+}
+function cssVar(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+function updateSwatches(){
+  const swHP=$('swHP'), swTQ=$('swTQ'), swMAP=$('swMAP');
+  if(swHP) swHP.style.background=cssVar('--accent');
+  if(swTQ){ swTQ.style.background=cssVar('--fg'); swTQ.style.height='2px'; }
+  if(swMAP){
+    swMAP.style.background='linear-gradient(90deg,'+cssVar('--dim')+' 50%, transparent 50%)';
+    swMAP.style.backgroundSize='6px 2px';
+    swMAP.style.backgroundRepeat='repeat-x';
+    swMAP.style.backgroundPosition='center';
+  }
+}
+
+/* ═══════════════ TOASTS ═══════════════ */
+function toast(msg, kind='ok'){
+  const t=$('toast');
+  t.innerHTML='';
+  const mk=document.createElement('span');
+  mk.className='toast-mark';
+  mk.textContent=kind==='err'?'[x]':kind==='warn'?'[!]':'[*]';
+  if(kind!=='ok') mk.style.color=cssVar('--accent');
+  t.appendChild(mk);
+  t.appendChild(document.createTextNode(msg));
+  t.style.opacity=1;
+  clearTimeout(toast._t);
+  toast._t=setTimeout(()=>t.style.opacity=0, 2000);
+}
+
+/* ═══════════════ PERSISTENCE ═══════════════ */
+const SAVE_KEY='aznur-engine-calc-v1';
+const SECTIONS_KEY='aznur-engine-sections-v1';
+let _saveTimer=null;
+function scheduleSave(){
+  clearTimeout(_saveTimer);
+  _saveTimer=setTimeout(saveState, 600);
+}
+function saveState(){
+  try{
+    const data={ project:S.project, params:{}, VE_USER };
+    PARAMS.forEach(k=>{data.params[k]=S[k];});
+    localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+  }catch{}
+}
+function loadState(){
+  try{
+    const raw=localStorage.getItem(SAVE_KEY);
+    if(!raw) return false;
+    const d=JSON.parse(raw);
+    if(!d||typeof d!=='object') return false;
+    if(d.project) S.project=d.project;
+    if(d.params) PARAMS.forEach(k=>{ if(k in d.params) S[k]=d.params[k]; });
+    if(d.VE_USER) VE_USER=d.VE_USER;
+    return true;
+  }catch{ return false; }
+}
+function clearSavedState(){
+  try{ localStorage.removeItem(SAVE_KEY); }catch{}
+}
+
+function saveSections(){
+  try{
+    const st={};
+    document.querySelectorAll('#sidebar .sec').forEach(s=>{ st[s.dataset.id]=s.classList.contains('open'); });
+    localStorage.setItem(SECTIONS_KEY, JSON.stringify(st));
+  }catch{}
+}
+function loadSections(){
+  try{
+    const raw=localStorage.getItem(SECTIONS_KEY);
+    if(!raw) return;
+    const st=JSON.parse(raw);
+    document.querySelectorAll('#sidebar .sec').forEach(s=>{
+      const v=st[s.dataset.id];
+      if(v===true) s.classList.add('open');
+      else if(v===false) s.classList.remove('open');
+    });
+  }catch{}
+}
 
 /* ═══════════════ GEOMETRY ═══════════════ */
 function disp_L(){ return S.cyl*PI/4*Math.pow(S.bore/1000,2)*(S.stroke/1000)*1000; }
 function disp_ci(){ return disp_L()*61.0237; }
-function dcr(){ // dynamic compression ratio from IVC
-  const r=S.cr, ivc=S.ivc*PI/180, Rr=S.stroke/1000, half=Rr/2;
-  const rod=1.65*S.stroke/1000, a=ivc;
-  const x = half*Math.cos(a)+Math.sqrt(Math.max(rod*rod-Math.pow(half*Math.sin(a),2),0));
-  const full = half+rod;
-  const effStroke = full - x;
-  const frac = Math.min(Math.max(effStroke/(2*half),0.3),1);
-  const Veff = frac*(r-1)+1;
-  return Math.pow(Veff,1)*1 + (r-1)*0 ;
-}
 function dcrReal(){
   const r=S.cr, ivc=S.ivc*PI/180;
   const rod=1.65*(S.stroke/1000), half=(S.stroke/1000)/2;
-  const x = half*Math.cos(ivc)+Math.sqrt(Math.max(rod*rod-Math.pow(half*Math.sin(ivc),2),0));
+  const x=half*Math.cos(ivc)+Math.sqrt(Math.max(rod*rod-Math.pow(half*Math.sin(ivc),2),0));
   const effStroke=(half+rod)-x, frac=Math.min(Math.max(effStroke/(2*half),0.3),1);
   const Vs=PI/4*Math.pow(S.bore/1000,2)*(S.stroke/1000);
   const Vc=Vs/(r-1);
@@ -696,8 +884,7 @@ function airflow_cfm(rpm){
   const Vd_ci=disp_ci();
   return ve_base(rpm)*Vd_ci*rpm/3456*(map_psia(rpm)/14.7)*((S.tamb+273.15)/chargeT(rpm));
 }
-</script>
-<script>
+
 /* ═══════════════ UI PLUMBING ═══════════════ */
 const PARAMS=['cyl','bore','stroke','cr','ivc','redline','asp','boost','boostrpm','comeff','ic','tamb','pamb','vemax','rpmpeak','cam','port','fuel','afr','iat','eta','inj','injpc','fpr'];
 function readInputs(){
@@ -705,7 +892,7 @@ function readInputs(){
     const el=$('p_'+k); if(!el)return;
     S[k]=(el.tagName==='SELECT'||el.type==='text')?el.value:parseFloat(el.value);
   });
-  const c=S.cam; $('camLbl').textContent=c<33?'stock':c<66?'street':'race';
+  const c=S.cam; const lbl=$('camLbl'); if(lbl) lbl.textContent=c<33?'stock':c<66?'street':'race';
 }
 function writeInputs(){
   PARAMS.forEach(k=>{const el=$('p_'+k); if(el)el.value=S[k];});
@@ -713,7 +900,11 @@ function writeInputs(){
 }
 document.querySelectorAll('#tabs .tab').forEach(t=>t.onclick=()=>gotoTab(t.dataset.t));
 function gotoTab(t){
-  document.querySelectorAll('#tabs .tab').forEach(x=>x.classList.toggle('on',x.dataset.t===t));
+  document.querySelectorAll('#tabs .tab').forEach(x=>{
+    const active=x.dataset.t===t;
+    x.classList.toggle('on',active);
+    x.setAttribute('aria-selected',active);
+  });
   document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id==='pane-'+t));
   if(t==='dyno')renderDyno();
   if(t==='bench')renderBench();
@@ -721,8 +912,10 @@ function gotoTab(t){
   if(t==='afr')renderAFR();
   if(t==='fuel')renderFuel();
 }
-document.querySelectorAll('.sec-h').forEach(h=>h.onclick=()=>h.parentElement.classList.toggle('open'));
-function toast(msg){const t=$('toast');t.textContent=msg;t.style.opacity=1;setTimeout(()=>t.style.opacity=0,1800);}
+document.querySelectorAll('.sec-h').forEach(h=>h.onclick=()=>{
+  h.parentElement.classList.toggle('open');
+  saveSections();
+});
 
 /* ═══════════════ DASHBOARD ═══════════════ */
 function renderDash(){
@@ -738,7 +931,7 @@ function renderDash(){
     ['Max airflow',`${airflow_cfm(S.rpmpeak).toFixed(0)} cfm <small>(${airflow_kgh(S.rpmpeak).toFixed(0)} kg/h)</small>`,`@ ${S.rpmpeak} rpm`],
     ['Charge temp',`${(chargeT(S.rpmpeak)-273.15).toFixed(0)} °C`,`after intercooler @ peak rpm`],
     ['Max piston speed',`${mps(S.redline).toFixed(1)} m/s`,`@ redline ${S.redline} rpm`],
-    ['Knock margin',`${(F[S.fuel].ron-(88+1.6*(S.cr-7)+0.55*(pr_at(S.rpmpeak)-1)*14.7+0.10*(chargeT(S.rpmpeak)-273.15-40))).toFixed(1)} RON`,knockRetard(S.rpmpeak)>0?`<span style="color:var(--red)">retard ${knockRetard(S.rpmpeak).toFixed(1)}° needed</span>`:'no retard required'],
+    ['Knock margin',`${(F[S.fuel].ron-(88+1.6*(S.cr-7)+0.55*(pr_at(S.rpmpeak)-1)*14.7+0.10*(chargeT(S.rpmpeak)-273.15-40))).toFixed(1)} RON`,knockRetard(S.rpmpeak)>0?`<span>retard ${knockRetard(S.rpmpeak).toFixed(1)}° needed</span>`:'no retard required'],
     ['Fuel @ peak power',`${(airflow_kgh(S.rpmpeak)/afr_at(S.rpmpeak)).toFixed(1)} kg/h <small>(${((airflow_kgh(S.rpmpeak)/afr_at(S.rpmpeak)/F[S.fuel].dens)*1000).toFixed(1)} L/h)</small>`,F[S.fuel].name],
   ];
   $('dashCards').innerHTML=cards.map(c=>`<div class="stat"><div class="k">${c[0]}</div><div class="v">${c[1]}</div><div class="d">${c[2]}</div></div>`).join('');
@@ -747,7 +940,7 @@ function renderDash(){
     `Disp: <b>${(disp_L()*1000).toFixed(0)} cc</b> · ${(disp_L()*1000/S.cyl).toFixed(0)} cc/cyl<br>`+
     `Peak VE: <b>${S.vemax}%</b> @ <b>${S.rpmpeak}</b> rpm · AFR <b>${S.afr}</b>`;
   const ret=knockRetard(S.rpmpeak);
-  $('statusbar').innerHTML=`Computed <b>16 × 31</b> maps · Advance range <b>${(mbt_at(1500,1)-ret).toFixed(1)}° – ${(mbt_at(S.redline,0.3)).toFixed(1)}°</b> · Knock-limited cells: <b>${ret>0?'YES - retard active':'0'}</b> · Project: <b>${S.project}</b>`;
+  $('statusbar').innerHTML=`Computed <b>16 × 31</b> maps · Advance range <b>${(mbt_at(1500,1)-ret).toFixed(1)}° – ${(mbt_at(S.redline,0.3)).toFixed(1)}°</b> · Knock-limited: <b>${ret>0?'YES — retard active':'0'}</b> · Project: <b>${S.project}</b>`;
 }
 function hp_peak(){let best={hp:0,rpm:0};for(let r=1000;r<=S.redline;r+=100){const h=hp_at(r);if(h>best.hp)best={hp:h,rpm:r};}return best;}
 function torque_lbft_peak(){let best={tq:0,rpm:0};for(let r=1000;r<=S.redline;r+=100){const t=torque_lbft(r);if(t>best.tq)best={tq:t,rpm:r};}return best;}
@@ -765,11 +958,18 @@ function recalcVE(){
     let v=ve_base(r)*100*(1+0.02*(mapFrac-1)*8);
     return +v.toFixed(1);
   }));
-  renderVE();renderDash();
+  renderVE();renderDash();scheduleSave();
+}
+function recalcVESilent(){
+  buildAxes();
+  VE_USER=MAP_ROWS.map(mp=>RPM_COLS.map(r=>{
+    const mapFrac=(mp+14.7)/14.7;
+    return +((ve_base(r)*100)*(1+0.02*(mapFrac-1)*8)).toFixed(1);
+  }));
 }
 function veColor(v){
   const t=Math.min(Math.max((v-35)/80,0),1);
-  const stops=[[59,76,192],[45,180,200],[52,199,123],[250,204,21],[251,146,60],[239,68,68]];
+  const stops=[[176,156,140],[212,168,120],[212,180,80],[210,140,60],[180,90,50],[150,60,40]];
   const seg=t*(stops.length-1), i=Math.min(Math.floor(seg),stops.length-2), f=seg-i;
   const c=stops[i].map((a,k)=>Math.round(a+(stops[i+1][k]-a)*f));
   return `rgb(${c[0]},${c[1]},${c[2]})`;
@@ -787,14 +987,41 @@ function renderVE(){
   });
   h+='</table>';
   $('veWrap').innerHTML=h;
-  $('veWrap').querySelectorAll('input').forEach(inp=>{
-    inp.onchange=()=>{const v=parseFloat(inp.value); if(!isNaN(v)){VE_USER[inp.dataset.j][inp.dataset.i]=Math.min(Math.max(v,10),140); inp.parentElement.style.background=veColor(v); inp.value=VE_USER[inp.dataset.j][inp.dataset.i].toFixed(1); renderDash();}};
+  const inputs=$('veWrap').querySelectorAll('input');
+  inputs.forEach(inp=>{
+    inp.onchange=()=>{
+      const v=parseFloat(inp.value);
+      if(!isNaN(v)){
+        VE_USER[inp.dataset.j][inp.dataset.i]=Math.min(Math.max(v,10),140);
+        inp.parentElement.style.background=veColor(v);
+        inp.value=VE_USER[inp.dataset.j][inp.dataset.i].toFixed(1);
+        renderDash();
+        scheduleSave();
+      }
+    };
+  });
+  // Keyboard navigation
+  const cols=RPM_COLS.length;
+  inputs.forEach((inp,i)=>{
+    inp.addEventListener('keydown',e=>{
+      let target=null;
+      if(e.key==='ArrowRight') target=inputs[i+1];
+      else if(e.key==='ArrowLeft') target=inputs[i-1];
+      else if(e.key==='ArrowDown') target=inputs[i+cols];
+      else if(e.key==='ArrowUp') target=inputs[i-cols];
+      else if(e.key==='Enter'){ inp.blur(); e.preventDefault(); }
+      if(target){
+        e.preventDefault();
+        target.focus();
+        target.select();
+      }
+    });
+    inp.addEventListener('focus',()=>inp.select());
   });
 }
-function recalcVESilent(){buildAxes();VE_USER=MAP_ROWS.map(mp=>RPM_COLS.map(r=>{const mapFrac=(mp+14.7)/14.7;return +((ve_base(r)*100)*(1+0.02*(mapFrac-1)*8)).toFixed(1);}));}
-function nudgeVE(d){if(!VE_USER)return;VE_USER=VE_USER.map(row=>row.map(v=>+(v+d).toFixed(1)));renderVE();renderDash();}
-function clearVE(){VE_USER=VE_USER.map(row=>row.map(()=>0));renderVE();}
-function fillVE(){const v=parseFloat($('veFill').value)||80;VE_USER=VE_USER.map(row=>row.map(()=>v));renderVE();renderDash();}
+function nudgeVE(d){if(!VE_USER)return;VE_USER=VE_USER.map(row=>row.map(v=>+(v+d).toFixed(1)));renderVE();renderDash();scheduleSave();}
+function clearVE(){VE_USER=VE_USER.map(row=>row.map(()=>0));renderVE();scheduleSave();}
+function fillVE(){const v=parseFloat($('veFill').value)||80;VE_USER=VE_USER.map(row=>row.map(()=>v));renderVE();renderDash();scheduleSave();}
 function smoothVE(){
   if(!VE_USER)return;
   const R2=VE_USER.map((row,j)=>row.map((v,i)=>{
@@ -805,10 +1032,9 @@ function smoothVE(){
     }
     return +(s/c).toFixed(1);
   }));
-  VE_USER=R2;renderVE();renderDash();
+  VE_USER=R2;renderVE();renderDash();scheduleSave();
 }
-</script>
-<script>
+
 /* ═══════════════ TIMING ═══════════════ */
 function renderTiming(){
   const rpms=RPM_COLS.length?RPM_COLS:(buildAxes(),RPM_COLS);
@@ -827,13 +1053,13 @@ function renderTiming(){
     h+='</tr>';
   });
   h+='</table>';
-  $('timingWrap').innerHTML=h+'<div class="note">Red cells are knock-limited (retarded below MBT by the octane model).</div>';
+  $('timingWrap').innerHTML=h+'<div class="note">Cells shown in the accent colour are knock-limited (retarded below MBT by the octane model).</div>';
 }
 
 /* ═══════════════ AFR / IAT ═══════════════ */
 function renderAFR(){
   const loads=[0,3,6,9,12,15,18,21,24,27,30];
-  let a='<div class="card"><h3>Target Lambda × Boost</h3><table class="data"><tr><th>MAP (psig)</th><th>AFR</th><th>λ</th><th>Egt trend</th></tr>';
+  let a='<div class="card"><h3>Target Lambda × Boost</h3><div class="table-scroll" style="max-height:none;"><table class="data"><tr><th>MAP (psig)</th><th>AFR</th><th>λ</th><th>EGT trend</th></tr>';
   loads.forEach(mp=>{
     const pr=(S.pamb+Math.max(mp,0))/S.pamb;
     let afr=pr>1.05?Math.min(S.afr,F[S.fuel].stoich*0.80):F[S.fuel].stoich*(mp>-2?1.0:1.05);
@@ -841,15 +1067,15 @@ function renderAFR(){
     const lam=afr/F[S.fuel].stoich;
     a+=`<tr><td>${mp} <small>(${(mp*6.89476).toFixed(0)} kPa)</small></td><td class="hl">${afr.toFixed(1)}</td><td>${lam.toFixed(2)}</td><td>${lam<0.85?'cool (rich)':lam>1.02?'hot (lean)':'nominal'}</td></tr>`;
   });
-  a+='</table></div>';
-  let b='<div class="card"><h3>IAT Density Correction (ideal gas)</h3><table class="data"><tr><th>IAT °C</th><th>ρ rel.</th><th>Power est.</th><th>Knock margin</th></tr>';
+  a+='</table></div></div>';
+  let b='<div class="card"><h3>IAT Density Correction (ideal gas)</h3><div class="table-scroll" style="max-height:none;"><table class="data"><tr><th>IAT °C</th><th>ρ rel.</th><th>Power est.</th><th>Knock margin</th></tr>';
   for(let t=-10;t<=80;t+=10){
     const rhoRel=(273.15+25)/(273.15+t);
     const pkw=hp_peak().hp*rhoRel;
     const km=F[S.fuel].ron-(88+1.6*(S.cr-7)+0.55*(pr_at(S.rpmpeak)-1)*14.7+0.10*(t-40));
     b+=`<tr><td>${t}</td><td>${rhoRel.toFixed(3)}</td><td>${pkw.toFixed(0)} hp <small>(${(pkw*0.7457).toFixed(0)} kW)</small></td><td class="${km<0?'neg':'pos'}">${km.toFixed(1)} RON</td></tr>`;
   }
-  b+='</table></div>';
+  b+='</table></div></div>';
   $('afrWrap').innerHTML=a+b;
 }
 
@@ -865,7 +1091,7 @@ function renderFuel(){
   $('fuelCards').innerHTML=[
     ['Required flow / injector',`${perInj.toFixed(1)} lb/hr <small>(${(perInj*0.126).toFixed(1)} g/s)</small>`,`for ${pkH.hp.toFixed(0)} hp at BSFC ${bsfc} · 85% duty`],
     ['Your injector flow',`${injLbhr.toFixed(1)} lb/hr <small>(${S.inj} cc/min)</small>`, `@ ${S.fpr} psi`],
-    ['Duty cycle @ peak',`${dutyAtPeak.toFixed(0)} %`,dutyAtPeak>95?'<span style="color:var(--red)">TOO SMALL - upgrade injectors</span>':dutyAtPeak>85?'<span style="color:var(--orange)">marginal</span>':'safe'],
+    ['Duty cycle @ peak',`${dutyAtPeak.toFixed(0)} %`,dutyAtPeak>95?'<span>TOO SMALL — upgrade injectors</span>':dutyAtPeak>85?'<span>marginal</span>':'safe'],
     ['Max supported HP',`${maxHp.toFixed(0)} hp <small>(${(maxHp*0.7457).toFixed(0)} kW)</small>`,`with current injectors @ 85% duty`],
     ['Fuel flow @ peak',`${(airflow_kgh(pkH.rpm)/afr_at(pkH.rpm)).toFixed(1)} kg/h <small>(${((airflow_kgh(pkH.rpm)/afr_at(pkH.rpm)/F[S.fuel].dens)*1000).toFixed(1)} L/h)</small>`,F[S.fuel].name],
     ['Stoich / target AFR',`${F[S.fuel].stoich} / ${afr_at(pkH.rpm)}`,`λ = ${(afr_at(pkH.rpm)/F[S.fuel].stoich).toFixed(2)} at peak power`],
@@ -892,15 +1118,22 @@ function renderDyno(){
     DYNO.push({rpm:r,hp:hp_at(r),tq:torque_lbft(r),map:map_psia(r)-14.7});
   }
   drawDyno();
+  if(!DYNO.length) return;
   const pkH=DYNO.reduce((m,d)=>d.hp>m.hp?d:m), pkT=DYNO.reduce((m,d)=>d.tq>m.tq?d:m), pkM=DYNO.reduce((m,d)=>d.map>m.map?d:m);
-  $('dynoPeaks').innerHTML=`Peak hp: <b style="color:var(--cyan)">${pkH.hp.toFixed(0)} hp (${(pkH.hp*0.7457).toFixed(0)} kW)</b> @ ${pkH.rpm} rpm &nbsp;|&nbsp; Peak torque: <b style="color:var(--orange)">${pkT.tq.toFixed(0)} lb·ft (${(pkT.tq*1.35582).toFixed(0)} N·m)</b> @ ${pkT.rpm} rpm &nbsp;|&nbsp; Peak MAP: <b style="color:var(--green)">${pkM.map.toFixed(1)} psig (${(pkM.map*6.89476).toFixed(1)} kPa)</b> @ ${pkM.rpm} rpm &nbsp;|&nbsp; Timing: MBT computed ${knockRetard(pkT.rpm)>0.5?'(knock-limited)':''}`;
+  $('dynoPeaks').innerHTML=`Peak hp: <b style="color:var(--accent)">${pkH.hp.toFixed(0)} hp (${(pkH.hp*0.7457).toFixed(0)} kW)</b> @ ${pkH.rpm} rpm · Peak torque: <b>${pkT.tq.toFixed(0)} lb·ft (${(pkT.tq*1.35582).toFixed(0)} N·m)</b> @ ${pkT.rpm} rpm · Peak MAP: <b>${pkM.map.toFixed(1)} psig (${(pkM.map*6.89476).toFixed(1)} kPa)</b> @ ${pkM.rpm} rpm · Timing: MBT ${knockRetard(pkT.rpm)>0.5?'(knock-limited)':''}`;
 }
 function drawDyno(){
   const cv=$('dynoCanvas'), ctx=cv.getContext('2d');
-  const W=cv.clientWidth||800; cv.width=W*2; cv.height=860; ctx.scale(2,2);
+  const W=cv.clientWidth||800; cv.width=W*2; cv.height=860;
+  ctx.setTransform(1,0,0,1,0,0); ctx.scale(2,2);
   const H=430, padL=56, padR=56, padT=26, padB=38;
-  ctx.clearRect(0,0,W,H);
-  if(!DYNO.length)return;
+  const lineC=cssVar('--line')||'#dcd9d9';
+  const fgC=cssVar('--fg')||'#201d1d';
+  const dimC=cssVar('--dim')||'#646262';
+  const accC=cssVar('--accent')||'#b45309';
+  const bgC=cssVar('--bg')||'#fdfcfc';
+  ctx.fillStyle=bgC; ctx.fillRect(0,0,W,H);
+  if(!DYNO.length) return;
   const show={hp:$('ckHP').checked,tq:$('ckTQ').checked,map:$('ckMAP').checked};
   const xs=DYNO.map(d=>d.rpm), x0=Math.min(...xs), x1=Math.max(...xs);
   const maxP=Math.max(...DYNO.map(d=>Math.max(show.hp?d.hp:0,show.tq?d.tq:0)))*1.08||1;
@@ -908,59 +1141,60 @@ function drawDyno(){
   const X=r=>padL+(r-x0)/(x1-x0)*(W-padL-padR);
   const YP=v=>H-padB-v/maxP*(H-padT-padB);
   const YM=v=>H-padB-(v-mapMin)/(mapMax-mapMin)*(H-padT-padB);
-  
-  ctx.strokeStyle='#e7e5e4';ctx.lineWidth=1;ctx.font='10px Inter, sans-serif';ctx.fillStyle='#78716c';
-  for(let i=0;i<=8;i++){const y=padT+i*(H-padT-padB)/8;ctx.beginPath();ctx.moveTo(padL,y);ctx.lineTo(W-padR,y);ctx.stroke();
-    const val=maxP*(1-i/8);ctx.textAlign='right';ctx.fillText(val.toFixed(0),padL-8,y+3);
-    if(show.map){const mv=mapMin+(mapMax-mapMin)*(1-i/8);ctx.textAlign='left';ctx.fillStyle='#10b981';ctx.fillText(mv.toFixed(1),W-padR+8,y+3);ctx.fillStyle='#78716c';}}
-  const step=x1-x0>3000?1000:500;
-  for(let r=Math.ceil(x0/step)*step;r<=x1;r+=step){const x=X(r);ctx.beginPath();ctx.moveTo(x,padT);ctx.lineTo(x,H-padB);ctx.stroke();ctx.textAlign='center';ctx.fillText(r,x,H-padB+16);}
-  ctx.fillStyle='#78716c';ctx.textAlign='center';ctx.fillText('RPM',(W)/2,H-6);
-  if(show.map){ctx.save();ctx.translate(14,H/2);ctx.rotate(-PI/2);ctx.fillText('psig / kPa',0,0);ctx.restore();}
-  
-  function plot(key,color,dash){
-    ctx.strokeStyle=color;ctx.lineWidth=2;ctx.setLineDash(dash||[]);
-    ctx.shadowColor=color;ctx.shadowBlur=8;
-    ctx.beginPath();
-    DYNO.forEach((d,i)=>{const x=X(d.rpm),y=key==='map'?YM(d.map):YP(d[key]);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
-    ctx.stroke();ctx.setLineDash([]);ctx.shadowBlur=0;
+
+  ctx.strokeStyle=lineC; ctx.lineWidth=1; ctx.font='10px IBM Plex Mono, monospace';
+  for(let i=0;i<=8;i++){
+    const y=padT+i*(H-padT-padB)/8;
+    ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(W-padR,y); ctx.stroke();
+    ctx.fillStyle=dimC; ctx.textAlign='right';
+    ctx.fillText((maxP*(1-i/8)).toFixed(0), padL-8, y+3);
+    if(show.map){
+      ctx.textAlign='left'; ctx.fillStyle=accC;
+      ctx.fillText((mapMin+(mapMax-mapMin)*(1-i/8)).toFixed(1), W-padR+8, y+3);
+    }
   }
-  if(show.map)plot('map','#10b981');
-  if(show.tq)plot('tq','#f59e0b',[8,6]);
-  if(show.hp)plot('hp','#d97706');
-  
+  const step=x1-x0>3000?1000:500;
+  for(let r=Math.ceil(x0/step)*step;r<=x1;r+=step){
+    const x=X(r);
+    ctx.beginPath(); ctx.moveTo(x,padT); ctx.lineTo(x,H-padB); ctx.stroke();
+    ctx.fillStyle=dimC; ctx.textAlign='center';
+    ctx.fillText(r,x,H-padB+16);
+  }
+  ctx.fillStyle=dimC; ctx.textAlign='center'; ctx.fillText('RPM', W/2, H-6);
+
+  function plot(key,color,dash){
+    ctx.strokeStyle=color; ctx.lineWidth=2; ctx.setLineDash(dash||[]);
+    ctx.beginPath();
+    DYNO.forEach((d,i)=>{
+      const x=X(d.rpm), y=key==='map'?YM(d.map):YP(d[key]);
+      i?ctx.lineTo(x,y):ctx.moveTo(x,y);
+    });
+    ctx.stroke(); ctx.setLineDash([]);
+  }
+  if(show.map) plot('map', dimC, [2,3]);
+  if(show.tq) plot('tq', fgC, [8,6]);
+  if(show.hp) plot('hp', accC);
+
   cv.onmousemove=e=>{
-    const rect=cv.getBoundingClientRect(),mx=e.clientX-rect.left;
+    const rect=cv.getBoundingClientRect(), mx=e.clientX-rect.left;
     const r=x0+(mx-padL)/(W-padL-padR)*(x1-x0);
     const d=DYNO.reduce((best,dd)=>Math.abs(dd.rpm-r)<Math.abs(best.rpm-r)?dd:best);
-    drawDynoBase(W,H,padL,padR,padT,padB);
-    ctx.strokeStyle='rgba(28,25,23,.25)';ctx.beginPath();ctx.moveTo(X(d.rpm),padT);ctx.lineTo(X(d.rpm),H-padB);ctx.stroke();
-    ctx.fillStyle='#fff';ctx.strokeStyle='#e7e5e4';
-    const bx=Math.min(Math.max(mx-80,padL),W-padR-160),by=padT+10;
-    ctx.fillRect(bx,by,160,84);ctx.strokeRect(bx,by,160,84);
-    ctx.fillStyle='#1c1917';ctx.textAlign='left';ctx.font='11px Inter, sans-serif';
-    ctx.fillText(`${d.rpm} rpm`,bx+10,by+16);
-    ctx.fillStyle='#d97706';ctx.fillText(`${d.hp.toFixed(1)} hp (${(d.hp*0.7457).toFixed(1)} kW)`,bx+10,by+32);
-    ctx.fillStyle='#f59e0b';ctx.fillText(`${d.tq.toFixed(1)} lb·ft (${(d.tq*1.35582).toFixed(1)} N·m)`,bx+10,by+48);
-    ctx.fillStyle='#10b981';ctx.fillText(`${d.map.toFixed(1)} psig (${(d.map*6.89476).toFixed(1)} kPa)`,bx+10,by+64);
+    drawDyno();
+    ctx.strokeStyle=lineC;
+    ctx.beginPath(); ctx.moveTo(X(d.rpm),padT); ctx.lineTo(X(d.rpm),H-padB); ctx.stroke();
+    ctx.fillStyle=bgC; ctx.strokeStyle=lineC;
+    const bx=Math.min(Math.max(mx-80,padL),W-padR-160), by=padT+10;
+    ctx.fillRect(bx,by,160,84); ctx.strokeRect(bx,by,160,84);
+    ctx.fillStyle=fgC; ctx.textAlign='left'; ctx.font='11px IBM Plex Mono, monospace';
+    ctx.fillText(`${d.rpm} rpm`, bx+10, by+16);
+    ctx.fillStyle=accC; ctx.fillText(`${d.hp.toFixed(1)} hp (${(d.hp*0.7457).toFixed(1)} kW)`, bx+10, by+32);
+    ctx.fillStyle=fgC; ctx.fillText(`${d.tq.toFixed(1)} lb·ft (${(d.tq*1.35582).toFixed(1)} N·m)`, bx+10, by+48);
+    ctx.fillStyle=dimC; ctx.fillText(`${d.map.toFixed(1)} psig (${(d.map*6.89476).toFixed(1)} kPa)`, bx+10, by+64);
   };
-  function drawDynoBase(){
-    const ctx2=cv.getContext('2d');ctx2.save();ctx2.setTransform(2,0,0,2,0,0);ctx2.clearRect(0,0,W,H);
-    ctx2.strokeStyle='#e7e5e4';ctx2.lineWidth=1;ctx2.font='10px Inter, sans-serif';
-    for(let i=0;i<=8;i++){const y=padT+i*(H-padT-padB)/8;ctx2.beginPath();ctx2.moveTo(padL,y);ctx2.lineTo(W-padR,y);ctx2.stroke();
-      ctx2.fillStyle='#78716c';ctx2.textAlign='right';ctx2.fillText((maxP*(1-i/8)).toFixed(0),padL-8,y+3);
-      if(show.map){ctx2.textAlign='left';ctx2.fillStyle='#10b981';ctx2.fillText((mapMin+(mapMax-mapMin)*(1-i/8)).toFixed(1),W-padR+8,y+3);}}
-    for(let r=Math.ceil(x0/step)*step;r<=x1;r+=step){const x=X(r);ctx2.beginPath();ctx2.moveTo(x,padT);ctx2.lineTo(x,H-padB);ctx2.stroke();ctx2.fillStyle='#78716c';ctx2.textAlign='center';ctx2.fillText(r,x,H-padB+16);}
-    function p2(key,color,dash){ctx2.strokeStyle=color;ctx2.lineWidth=2;ctx2.setLineDash(dash||[]);ctx2.shadowColor=color;ctx2.shadowBlur=8;ctx2.beginPath();DYNO.forEach((d,i)=>{const x=X(d.rpm),y=key==='map'?YM(d.map):YP(d[key]);i?ctx2.lineTo(x,y):ctx2.moveTo(x,y);});ctx2.stroke();ctx2.setLineDash([]);ctx2.shadowBlur=0;}
-    if(show.map)p2('map','#10b981');if(show.tq)p2('tq','#f59e0b',[8,6]);if(show.hp)p2('hp','#d97706');
-    ctx2.restore();
-  }
-  cv._redraw=drawDynoBase;
 }
 window.addEventListener('resize',()=>{if($('pane-dyno').classList.contains('on'))drawDyno();});
-</script>
-<script>
-/* ═══════════════ BENCHMARKS - theory vs. published ═══════════════ */
+
+/* ═══════════════ BENCHMARKS ═══════════════ */
 const BENCHMARKS=[
  {name:'GM LS3 6.2L V8', car:'Chevrolet Corvette C6 / Camaro SS', pubHp:426, pubHpRpm:5900, pubTq:420, pubTqRpm:4600,
   src:'PatSnap / CarBuzz',
@@ -995,19 +1229,21 @@ function renderBench(){
     h+=`<tr><td style="text-align:left">${r.b.name}</td><td style="text-align:left;color:var(--dim)">${r.b.car}</td>`+
        `<td>${r.b.pubHp} <small>(${(r.b.pubHp*0.7457).toFixed(0)})</small> @ ${r.b.pubHpRpm}</td><td class="hl">${r.hpPred.toFixed(0)} <small>(${(r.hpPred*0.7457).toFixed(0)})</small></td><td class="${cls(dH)}">${dH>=0?'+':''}${dH.toFixed(1)}%</td>`+
        `<td>${r.b.pubTq} <small>(${(r.b.pubTq*1.35582).toFixed(0)})</small> @ ${r.b.pubTqRpm}</td><td class="hl">${r.tqPred.toFixed(0)} <small>(${(r.tqPred*1.35582).toFixed(0)})</small></td><td class="${cls(dT)}">${dT>=0?'+':''}${dT.toFixed(1)}%</td>`+
-       `<td style="color:var(--dimmer)">${r.b.src}</td><td><button onclick="loadBench(${k})">Load</button></td></tr>`;
+       `<td style="color:var(--faint)">${r.b.src}</td><td><button onclick="loadBench(${k})">Load</button></td></tr>`;
   });
   h+='</table>';
   const avgH=BENCH_RES.reduce((s,r)=>s+Math.abs(r.hpPred/r.b.pubHp-1),0)/BENCH_RES.length*100;
   const avgT=BENCH_RES.reduce((s,r)=>s+Math.abs(r.tqPred/r.b.pubTq-1),0)/BENCH_RES.length*100;
-  h+=`<div class="note">Mean absolute error: <b style="color:var(--cyan)">${avgH.toFixed(1)}%</b> on power, <b style="color:var(--cyan)">${avgT.toFixed(1)}%</b> on torque across ${BENCH_RES.length} production engines. "Load" pushes that engine's parameters into the sidebar.</div>`;
+  h+=`<p class="note">Mean absolute error: <b style="color:var(--accent)">${avgH.toFixed(1)}%</b> on power, <b style="color:var(--accent)">${avgT.toFixed(1)}%</b> on torque across ${BENCH_RES.length} production engines. "Load" pushes that engine's parameters into the sidebar.</p>`;
   $('benchWrap').innerHTML=h;
 }
 function loadBench(k){
   const b=BENCHMARKS[k];
   Object.assign(S,b.p); S.project=b.name; VE_USER=null;
   writeInputs(); recalcVE(); renderDash(); renderTiming(); renderAFR(); renderFuel();
-  toast('Loaded '+b.name+' into the model'); gotoTab('dash');
+  scheduleSave();
+  toast('Loaded '+b.name+' into the model');
+  gotoTab('dash');
 }
 
 /* ═══════════════ CSV EXPORT ═══════════════ */
@@ -1070,6 +1306,7 @@ function saveProject(){
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,1)],{type:'application/json'}));
   a.download=(S.project||'engine').replace(/[^\w\-]+/g,'_')+'.enginecalc.json'; a.click();
+  saveState();
   toast('Project saved');
 }
 function openProject(e){
@@ -1080,30 +1317,101 @@ function openProject(e){
     PARAMS.forEach(k=>{if(k in d)S[k]=d[k];});
     if(d.project)S.project=d.project;
     VE_USER=d.VE_USER||null;
-    writeInputs(); if(!VE_USER)recalcVE(); else renderVE();
+    writeInputs();
+    if(!VE_USER)recalcVE(); else { buildAxes(); renderVE(); }
     renderDash();renderTiming();renderAFR();renderFuel();
+    scheduleSave();
     toast('Project loaded');
-  }catch(err){toast('Invalid project file');}};
+  }catch(err){toast('Invalid project file','err');}};
   rd.readAsText(f); e.target.value='';
 }
-function newProject(){location.reload();}
+function newProject(){
+  clearSavedState();
+  location.reload();
+}
+
+/* ═══════════════ DIAGNOSTICS ═══════════════ */
+function copyDiag(){
+  const data={
+    project:S.project,
+    params:{...S},
+    veUser:VE_USER?'user-edited':'model',
+    theme:document.documentElement.getAttribute('data-theme')||'system',
+    rpmCols:RPM_COLS.length,
+    mapRows:MAP_ROWS.length,
+    redline:S.redline,
+    dynoPoints:DYNO.length,
+  };
+  const text=JSON.stringify(data,null,2);
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text)
+      .then(()=>toast('Diagnostics copied'))
+      .catch(()=>toast('Copy failed','err'));
+  }else{
+    toast('Clipboard unavailable','warn');
+  }
+}
+
+/* ═══════════════ KEYBOARD SHORTCUTS ═══════════════ */
+document.addEventListener('keydown',e=>{
+  const isTyping=e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA'||e.target.tagName==='SELECT';
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){
+    if(isTyping)return;
+    e.preventDefault(); saveProject();
+  } else if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){
+    e.preventDefault();
+    readInputs();
+    renderDash();
+    if($('pane-dyno').classList.contains('on')) renderDyno();
+  } else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='n'){
+    e.preventDefault(); newProject();
+  }
+});
 
 /* ═══════════════ INIT ═══════════════ */
 (function init(){
+  // Init theme first
+  initTheme();
+
+  // Populate fuel dropdown
   const sel=$('p_fuel');
-  Object.keys(FUELS).forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=FUELS[k].name;sel.appendChild(o);});
+  Object.keys(FUELS).forEach(k=>{
+    const o=document.createElement('option');
+    o.value=k; o.textContent=FUELS[k].name; sel.appendChild(o);
+  });
+
+  // Try loading saved state
+  const restored=loadState();
   writeInputs();
+  loadSections();
+
   buildAxes();
-  recalcVE();
-  renderDash();renderTiming();renderAFR();renderFuel();
+  if(restored && VE_USER){
+    renderVE();
+  }else{
+    recalcVE();
+  }
+  renderDash();
+  renderTiming();
+  renderAFR();
+  renderFuel();
+  updateSwatches();
+
   const VE_KEYS=['cyl','bore','stroke','cr','redline','asp','boost','boostrpm','comeff','ic','tamb','pamb','vemax','rpmpeak','cam','port'];
   document.querySelectorAll('#sidebar input,#sidebar select').forEach(el=>{
     el.addEventListener('input',()=>{
       readInputs();
-      if(VE_KEYS.includes(el.id.replace('p_',''))){VE_USER=null;recalcVE();}
-      renderDash();renderTiming();renderAFR();renderFuel();
+      if(VE_KEYS.includes(el.id.replace('p_',''))){
+        VE_USER=null;
+        recalcVE();
+      }
+      renderDash();
+      renderTiming();
+      renderAFR();
+      renderFuel();
       if($('pane-dyno').classList.contains('on'))renderDyno();
       if($('pane-bench').classList.contains('on'))renderBench();
+      scheduleSave();
     });
   });
 })();
